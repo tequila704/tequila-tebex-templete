@@ -61,10 +61,25 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .tools h3{margin:0 0 12px}.search-wrap{position:relative;margin-bottom:14px}.search-wrap input{width:100%;height:44px;border-radius:12px;border:1px solid rgba(244,189,54,.22);background:#090a0b;color:#fff;padding:0 13px}.filter-stack{display:grid;gap:7px}.filter-btn{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#e6dac2;border-radius:11px;padding:10px 12px;font-weight:800}.filter-btn:hover,.filter-btn.active{background:rgba(244,189,54,.08);border-color:rgba(244,189,54,.25);color:#ffd66b}.tool-note{margin-top:14px;padding:12px;border-radius:12px;background:#0a0a0b;border:1px solid var(--line2);color:var(--muted);font-size:.76rem;line-height:1.45}
 .results-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;color:var(--muted);font-size:.82rem}.results-meta b{color:#fff}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.resource-card{background:linear-gradient(180deg,#121316,#0b0c0d);border:1px solid var(--line2);border-radius:19px;padding:18px;min-height:255px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:.2s ease}.resource-card:hover{transform:translateY(-4px);border-color:rgba(244,189,54,.42);box-shadow:0 18px 50px rgba(0,0,0,.34)}
-.resource-card:after{content:"";position:absolute;right:-50px;top:-60px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(255,60,174,.10),transparent 68%);pointer-events:none}
-.card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.category-symbol{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#2a1c05,#121212);border:1px solid rgba(244,189,54,.22);color:var(--gold);font-size:1.15rem;font-weight:1000}.save-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line2);background:#0d0e10;color:#a99e89;font-size:1rem}.save-btn.saved{color:#ffd563;border-color:rgba(244,189,54,.45);background:rgba(244,189,54,.08)}
-.resource-card h3{font-size:1.25rem;margin:16px 0 7px}.resource-card p{color:var(--muted);line-height:1.55;font-size:.88rem;margin:0 0 16px}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}.tag{font-size:.68rem;font-weight:900;padding:6px 8px;border-radius:999px;background:#0a0b0c;border:1px solid var(--line2);color:#d7c9ad}.card-actions{display:flex;gap:8px;margin-top:auto}.card-actions a{flex:1}.card-actions .pill{width:100%;border-radius:11px;padding:10px 12px}.copy-btn{border:1px solid var(--line2);background:#101114;color:#eee;border-radius:11px;padding:10px 12px;font-weight:850}
+.resource-card{background:
+  linear-gradient(180deg,rgba(24,24,27,.98),rgba(7,8,9,.98));
+  border:1px solid rgba(244,189,54,.28);border-radius:22px;padding:20px;min-height:275px;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;cursor:pointer;
+  box-shadow:0 12px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.035);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.resource-card:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(244,189,54,.62),transparent 35%,transparent 65%,rgba(255,60,174,.34));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.45;pointer-events:none}
+.resource-card:hover{transform:translateY(-10px) scale(1.025);border-color:rgba(244,189,54,.72);box-shadow:0 28px 70px rgba(0,0,0,.58),0 0 28px rgba(244,189,54,.14),0 0 42px rgba(255,60,174,.08)}
+.resource-card:after{content:"";position:absolute;right:-42px;top:-48px;width:175px;height:175px;border-radius:50%;background:radial-gradient(circle,rgba(255,60,174,.20),rgba(244,189,54,.07) 42%,transparent 70%);pointer-events:none;transition:.22s ease}
+.resource-card:hover:after{transform:scale(1.18);opacity:1}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.category-symbol{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#3a2508,#17120d 58%,#0b0b0c);border:1px solid rgba(244,189,54,.44);color:#ffd86b;font-size:1.28rem;font-weight:1000;box-shadow:0 8px 24px rgba(244,189,54,.12)}.save-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:#0d0e10;color:#a99e89;font-size:1rem;position:relative;z-index:3}.save-btn.saved{color:#ffd563;border-color:rgba(244,189,54,.45);background:rgba(244,189,54,.08)}
+.resource-card h3{font-size:1.42rem;margin:18px 0 7px;letter-spacing:-.02em;position:relative;z-index:2}.resource-card p{color:var(--muted);line-height:1.58;font-size:.9rem;margin:0 0 16px;position:relative;z-index:2}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:17px;position:relative;z-index:2}.tag{font-size:.68rem;font-weight:900;padding:6px 8px;border-radius:999px;background:#0a0b0c;border:1px solid rgba(244,189,54,.15);color:#ddcfb2}.card-actions{display:flex;gap:8px;margin-top:auto;position:relative;z-index:3}.card-actions .pill{flex:1;width:100%;border-radius:11px;padding:11px 12px}.preview-btn{border:1px solid rgba(244,189,54,.28);background:linear-gradient(180deg,#161719,#0d0e10);color:#fff4d5;border-radius:11px;padding:11px 12px;font-weight:900}.preview-btn:hover{border-color:rgba(244,189,54,.6);background:rgba(244,189,54,.08)}.copy-btn{border:1px solid var(--line2);background:#101114;color:#eee;border-radius:11px;padding:10px 12px;font-weight:850}
+.package-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.74);backdrop-filter:blur(8px);z-index:190;opacity:0;pointer-events:none;transition:.18s ease}.package-modal-backdrop.show{opacity:1;pointer-events:auto}
+.package-modal{position:fixed;left:50%;top:50%;z-index:200;width:min(560px,92vw);transform:translate(-50%,-46%) scale(.96);opacity:0;pointer-events:none;background:linear-gradient(180deg,#17181b,#090a0b);border:1px solid rgba(244,189,54,.52);border-radius:24px;box-shadow:0 34px 110px rgba(0,0,0,.72),0 0 36px rgba(244,189,54,.13),0 0 52px rgba(255,60,174,.09);transition:.2s ease;overflow:hidden}
+.package-modal.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.package-modal:before{content:"";position:absolute;right:-80px;top:-90px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,60,174,.24),rgba(244,189,54,.06) 42%,transparent 70%);pointer-events:none}
+.package-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.07)}.package-modal-head strong{font-size:.78rem;letter-spacing:.14em;color:var(--gold)}.package-close{width:38px;height:38px;border-radius:11px;border:1px solid var(--line2);background:#0d0e10;color:#fff;font-size:1.1rem}
+.package-modal-body{padding:24px;position:relative}.package-modal-symbol{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(145deg,#3c2708,#14110d 58%,#0a0a0b);border:1px solid rgba(244,189,54,.46);color:#ffd86b;font-size:1.4rem;font-weight:1000;box-shadow:0 12px 30px rgba(244,189,54,.12)}.package-modal h2{font-size:2rem;line-height:1;margin:18px 0 10px;letter-spacing:-.04em}.package-modal p{color:var(--muted);line-height:1.65;margin:0 0 18px}.package-modal-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px}.package-modal-actions{display:grid;grid-template-columns:1fr auto;gap:9px}.package-modal-actions .pill{border-radius:12px}.package-modal-actions button{border-radius:12px}
+@media(max-width:560px){.package-modal-actions{grid-template-columns:1fr}.package-modal h2{font-size:1.65rem}}
 .empty{display:none;padding:30px;text-align:center;border:1px dashed rgba(244,189,54,.30);border-radius:18px;color:var(--muted)}
 .quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.quick-card{border:1px solid var(--line2);background:linear-gradient(180deg,#111214,#090a0b);border-radius:18px;padding:18px}.quick-card h3{margin:0 0 7px}.quick-card p{color:var(--muted);font-size:.85rem;line-height:1.5;margin:0 0 14px}
 .footer{margin-top:30px;border-top:1px solid var(--line2);padding:26px 0 34px;color:#a99d86}.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}.footer-links{display:flex;gap:14px;flex-wrap:wrap}.footer a:hover{color:var(--gold)}
@@ -168,6 +183,20 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   </div>
 </footer>
 <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+<div class="package-modal-backdrop" id="packageBackdrop" aria-hidden="true"></div>
+<section class="package-modal" id="packageModal" role="dialog" aria-modal="true" aria-labelledby="packageModalTitle" aria-hidden="true">
+  <div class="package-modal-head"><strong>TEQUILA5M PACKAGE</strong><button class="package-close" id="packageClose" aria-label="Close package pop-out">✕</button></div>
+  <div class="package-modal-body">
+    <div class="package-modal-symbol" id="packageModalSymbol">T5</div>
+    <h2 id="packageModalTitle">Package</h2>
+    <p id="packageModalDesc"></p>
+    <div class="package-modal-tags" id="packageModalTags"></div>
+    <div class="package-modal-actions">
+      <a class="pill gold" id="packageModalOpen" href="#" target="_blank" rel="noopener">Open on Tebex ↗</a>
+      <button class="copy-btn" id="packageModalCopy">Copy Link</button>
+    </div>
+  </div>
+</section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 (() => {
@@ -213,11 +242,11 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 
   function card(c){
     const isSaved=saved.has(c.id);
-    return `<article class="resource-card" data-id="${c.id}">
+    return `<article class="resource-card" data-id="${c.id}" data-preview="${c.id}" tabindex="0" role="button" aria-label="Open ${c.name} package details">
       <div class="card-top"><div class="category-symbol">${c.symbol}</div><button class="save-btn ${isSaved?'saved':''}" data-save="${c.id}" aria-pressed="${isSaved}" aria-label="${isSaved?'Unsave':'Save'} ${c.name}">★</button></div>
       <h3>${c.name}</h3><p>${c.desc}</p>
       <div class="tags">${c.tags.map(t=>`<span class="tag">${t.toUpperCase()}</span>`).join('')}</div>
-      <div class="card-actions"><a class="pill gold" href="${c.url}" target="_blank" rel="noopener">Open on Tebex ↗</a><button class="copy-btn" data-copy="${c.url}">Copy Link</button></div>
+      <div class="card-actions"><button class="preview-btn" data-preview-btn="${c.id}">View Package</button><a class="pill gold" href="${c.url}" target="_blank" rel="noopener">Tebex ↗</a></div>
     </article>`;
   }
 
@@ -235,18 +264,46 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
     bindCardActions();
   }
 
+  const packageModal=$('#packageModal'),packageBackdrop=$('#packageBackdrop'),packageClose=$('#packageClose');
+  let activePackage=null;
+  function openPackage(id){
+    const item=categories.find(c=>c.id===id); if(!item)return;
+    activePackage=item;
+    $('#packageModalSymbol').textContent=item.symbol;
+    $('#packageModalTitle').textContent=item.name;
+    $('#packageModalDesc').textContent=item.desc;
+    $('#packageModalTags').innerHTML=item.tags.map(t=>`<span class="tag">${t.toUpperCase()}</span>`).join('');
+    $('#packageModalOpen').href=item.url;
+    packageBackdrop.classList.add('show'); packageModal.classList.add('show');
+    packageBackdrop.setAttribute('aria-hidden','false'); packageModal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden'; packageClose.focus();
+  }
+  function closePackage(){
+    packageBackdrop.classList.remove('show'); packageModal.classList.remove('show');
+    packageBackdrop.setAttribute('aria-hidden','true'); packageModal.setAttribute('aria-hidden','true');
+    document.body.style.overflow=''; activePackage=null;
+  }
+  packageClose.addEventListener('click',closePackage);
+  packageBackdrop.addEventListener('click',closePackage);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&packageModal.classList.contains('show'))closePackage();});
+  $('#packageModalCopy').addEventListener('click',async()=>{
+    if(!activePackage)return;
+    try{await navigator.clipboard.writeText(activePackage.url);}catch{const ta=document.createElement('textarea');ta.value=activePackage.url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+    showToast('Package link copied.');
+  });
+
   function bindCardActions(){
-    $$('[data-save]').forEach(btn=>btn.addEventListener('click',()=>{
+    $('[data-save]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();
       const id=btn.dataset.save;
       if(saved.has(id)){saved.delete(id);showToast('Removed from saved.');}else{saved.add(id);showToast('Saved in this browser.');}
       localStorage.setItem('tequila5m:savedCategories',JSON.stringify([...saved]));
       render();
     }));
-    $$('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{
-      const value=btn.dataset.copy;
-      try{await navigator.clipboard.writeText(value);}catch{const ta=document.createElement('textarea');ta.value=value;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
-      showToast('Category link copied.');
-    }));
+    $('[data-preview-btn]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();openPackage(btn.dataset.previewBtn);}));
+    $('.resource-card').forEach(card=>{
+      card.addEventListener('click',e=>{if(e.target.closest('a,button'))return;openPackage(card.dataset.preview);});
+      card.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('a,button')){e.preventDefault();openPackage(card.dataset.preview);}});
+    });
   }
 
   $$('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
