@@ -224,7 +224,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   ];
 
   const $ = (s,r=document)=>r.querySelector(s);
-  const $ = (s,r=document)=>[...r.querySelectorAll(s)];
+  const all = (s,r=document)=>[...r.querySelectorAll(s)];
   // Cursor + visual effects start before the store UI so later UI errors cannot block them.
   (() => {
     const effects=document.getElementById('effects');
@@ -400,9 +400,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
     });
   }
 
-  $('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  all('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
     activeFilter=btn.dataset.filter;
-    $$('.filter-btn').forEach(b=>b.classList.toggle('active',b===btn));
+    all('.filter-btn').forEach(b=>b.classList.toggle('active',b===btn));
     render();
   }));
   $('#searchInput').addEventListener('input',e=>{searchTerm=e.target.value;render();});
@@ -410,7 +410,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 
   const menuBtn=$('#menuBtn'),nav=$('#nav');
   menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(open));menuBtn.textContent=open?'✕':'☰';});
-  $$('#nav a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');menuBtn.textContent='☰';}));
+  all('#nav a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');menuBtn.textContent='☰';}));
 
   const backTop=$('#backTop');
   window.addEventListener('scroll',()=>backTop.classList.toggle('show',window.scrollY>500),{passive:true});
