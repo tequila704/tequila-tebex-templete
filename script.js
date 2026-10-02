@@ -32,24 +32,75 @@
   }
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!reduceMotion) {
-    let last = 0;
-    const sparkles = ["✦","✧","✶","✷","✹","❋"];
+    const glyphs = ["✦","✧","★","☆"];
+    const core = document.createElement("span");
+    core.className = "cursor-star-core";
+    core.textContent = "✦";
+    document.body.appendChild(core);
+
+    let lastSpawn = 0;
+    let lastX = null;
+    let lastY = null;
+
+    const makeStar = (x, y, burst = false) => {
+      const sp = document.createElement("span");
+      sp.className = burst ? "cursor-sparkle cursor-sparkle-burst" : "cursor-sparkle";
+      sp.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      sp.style.left = x + "px";
+      sp.style.top = y + "px";
+      sp.style.fontSize = (burst ? 8 + Math.random() * 9 : 7 + Math.random() * 8) + "px";
+      sp.style.setProperty("--tx", ((Math.random() * (burst ? 28 : 15)) - (burst ? 14 : 7.5)).toFixed(1) + "px");
+      sp.style.setProperty("--ty", ((Math.random() * (burst ? 28 : 16)) - (burst ? 14 : 8)).toFixed(1) + "px");
+      sp.style.setProperty("--rot", ((Math.random() * 90) - 45).toFixed(0) + "deg");
+      sp.style.setProperty("--life", (burst ? 430 + Math.random() * 180 : 360 + Math.random() * 170).toFixed(0) + "ms");
+      document.body.appendChild(sp);
+      setTimeout(() => sp.remove(), burst ? 700 : 620);
+    };
+
     document.addEventListener("pointermove", e => {
+      core.style.left = e.clientX + "px";
+      core.style.top = e.clientY + "px";
+      core.classList.add("show");
+
       const now = performance.now();
-      if (now-last < 16) return;
-      last = now;
-      for (let i=0;i<3;i++) {
-        const sp = document.createElement("span");
-        sp.className = "cursor-sparkle";
-        sp.textContent = sparkles[Math.floor(Math.random()*sparkles.length)];
-        sp.style.left = (e.clientX + Math.random()*18 - 9) + "px";
-        sp.style.top = (e.clientY + Math.random()*18 - 9) + "px";
-        sp.style.fontSize = (9 + Math.random()*11) + "px";
-        sp.style.setProperty("--x", ((Math.random()*46)-23)+"px");
-        sp.style.setProperty("--y", (-(12+Math.random()*28))+"px");
-        document.body.appendChild(sp);
-        setTimeout(()=>sp.remove(),820);
+      if (lastX === null) {
+        lastX = e.clientX;
+        lastY = e.clientY;
       }
+
+      if (now - lastSpawn >= 18) {
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        const len = Math.hypot(dx, dy) || 1;
+        const backX = -(dx / len);
+        const backY = -(dy / len);
+
+        const count = Math.random() > 0.58 ? 2 : 1;
+        for (let i = 0; i < count; i++) {
+          const distance = 5 + Math.random() * 12;
+          const sideX = -backY * ((Math.random() * 9) - 4.5);
+          const sideY = backX * ((Math.random() * 9) - 4.5);
+          makeStar(
+            e.clientX + backX * distance + sideX,
+            e.clientY + backY * distance + sideY
+          );
+        }
+        lastSpawn = now;
+        lastX = e.clientX;
+        lastY = e.clientY;
+      }
+    }, {passive:true});
+
+    document.addEventListener("pointerleave", () => core.classList.remove("show"));
+
+    document.addEventListener("pointerdown", e => {
+      for (let i = 0; i < 9; i++) {
+        const a = (Math.PI * 2 * i / 9) + Math.random() * .25;
+        const r = 5 + Math.random() * 15;
+        makeStar(e.clientX + Math.cos(a) * r, e.clientY + Math.sin(a) * r, true);
+      }
+      core.classList.add("pop");
+      setTimeout(() => core.classList.remove("pop"), 150);
     }, {passive:true});
   }
   const categoryTrack = $("#categoryTrack");
