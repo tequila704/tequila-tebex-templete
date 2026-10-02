@@ -20,25 +20,75 @@ button{cursor:pointer}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .shell{width:min(1500px,94vw);margin:auto}
 .effects{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
-/* Clean original-style ambient effects: subtle falling shot glasses + small pink cursor sparkles. */
-.tq-shot-stream{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:11;}
-.tq-shot{position:absolute;top:-14vh;left:0;opacity:0;user-select:none;pointer-events:none;
-  filter:drop-shadow(0 0 7px rgba(255,77,188,.20)) drop-shadow(0 0 10px rgba(243,191,59,.10));
-  animation:tqShotFallPreview var(--duration,14s) linear var(--delay,0s) infinite;will-change:transform,opacity;}
-@keyframes tqShotFallPreview{
-  0%{transform:translate3d(0,-14vh,0) rotate(var(--r0,-10deg)) scale(var(--scale,.9));opacity:0}
-  10%{opacity:.24}
-  80%{opacity:.24}
-  100%{transform:translate3d(var(--drift,0px),116vh,0) rotate(var(--r1,150deg)) scale(var(--scale,.9));opacity:0}
+/* TEQUILA5M effects v3: visible tequila rain + pink cursor sparkle/trail. */
+.tq-shot-stream{
+  position:fixed;inset:0;overflow:hidden;pointer-events:none;
+  z-index:70;
 }
-.tq-cursor-sparkle{position:fixed;left:0;top:0;pointer-events:none;z-index:2147483646;line-height:1;
-  font-family:Arial,Helvetica,sans-serif;font-weight:900;color:#ff4dbc;
-  text-shadow:0 0 5px rgba(255,77,188,1),0 0 10px rgba(255,77,188,.75),0 0 16px rgba(255,180,230,.45);
-  animation:tqSparklePreview .62s cubic-bezier(.18,.72,.32,1) forwards;will-change:transform,opacity;}
-@keyframes tqSparklePreview{
-  0%{opacity:.96;transform:translate(-50%,-50%) scale(.45) rotate(0deg)}
-  45%{opacity:.82}
-  100%{opacity:0;transform:translate(calc(-50% + var(--x,0px)),calc(-50% + var(--y,-18px))) scale(1.18) rotate(var(--rot,55deg))}
+.tq-shot{
+  position:absolute;top:-16vh;left:0;display:block;
+  width:22px;height:30px;opacity:0;pointer-events:none;user-select:none;
+  border:2px solid rgba(255,255,255,.78);
+  border-top-width:3px;border-radius:3px 3px 7px 7px;
+  background:
+    linear-gradient(to top,rgba(244,189,54,.96) 0 48%,rgba(255,212,92,.78) 48% 57%,rgba(255,255,255,.08) 57% 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 0 8px rgba(244,189,54,.48),
+    0 0 14px rgba(255,60,174,.22);
+  transform-origin:center;
+  animation:tqShotFall var(--duration,12s) linear var(--delay,0s) infinite;
+  will-change:transform,opacity;
+}
+.tq-shot::before{
+  content:"";
+  position:absolute;left:2px;right:2px;top:3px;height:2px;
+  background:rgba(255,255,255,.7);border-radius:999px;
+}
+.tq-shot::after{
+  content:"✦";
+  position:absolute;right:-9px;top:-10px;
+  color:#ff4dbc;font-size:12px;font-weight:900;
+  text-shadow:0 0 5px #ff4dbc,0 0 10px rgba(255,77,188,.9);
+}
+@keyframes tqShotFall{
+  0%{transform:translate3d(0,-16vh,0) rotate(var(--r0,-8deg)) scale(var(--scale,.95));opacity:0}
+  7%{opacity:.72}
+  88%{opacity:.68}
+  100%{transform:translate3d(var(--drift,0px),118vh,0) rotate(var(--r1,135deg)) scale(var(--scale,.95));opacity:0}
+}
+.tq-cursor-core,
+.tq-cursor-sparkle{
+  position:fixed;left:0;top:0;pointer-events:none;
+  z-index:2147483647;line-height:1;
+  font-family:Arial,Helvetica,sans-serif;font-weight:900;
+  color:#ff4dbc;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 6px #ff4dbc,
+    0 0 12px rgba(255,77,188,.95),
+    0 0 20px rgba(255,120,205,.7);
+}
+.tq-cursor-core{
+  font-size:22px;
+  transform:translate(-50%,-50%);
+  opacity:0;
+  transition:opacity .12s ease;
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.9));
+}
+.tq-cursor-core.is-moving{opacity:1}
+.tq-cursor-sparkle{
+  animation:tqSparkleTrail .72s cubic-bezier(.18,.72,.32,1) forwards;
+  will-change:transform,opacity;
+}
+@keyframes tqSparkleTrail{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.65) rotate(0deg)}
+  35%{opacity:.95}
+  100%{
+    opacity:0;
+    transform:translate(calc(-50% + var(--x,0px)),calc(-50% + var(--y,-18px)))
+      scale(1.35) rotate(var(--rot,60deg));
+  }
 }
 .site-header{position:sticky;top:0;z-index:80;background:rgba(4,4,4,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line2)}
 .header-inner{min-height:74px;display:flex;align-items:center;gap:18px}
@@ -227,47 +277,75 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 <script id="tequila-original-effects">
 (function(){
   var shotLayer=document.getElementById('tq-shot-stream');
-  if(shotLayer && !shotLayer.dataset.ready){
-    shotLayer.dataset.ready='1';
-    for(var i=0;i<12;i++){
+
+  if(shotLayer){
+    shotLayer.innerHTML='';
+    for(var i=0;i<16;i++){
       var shot=document.createElement('span');
       shot.className='tq-shot';
-      shot.textContent='🥃';
-      shot.style.left=(2+Math.random()*96).toFixed(2)+'%';
-      shot.style.fontSize=(15+Math.random()*12).toFixed(0)+'px';
-      shot.style.setProperty('--duration',(11+Math.random()*8).toFixed(2)+'s');
-      shot.style.setProperty('--delay',(-Math.random()*18).toFixed(2)+'s');
-      shot.style.setProperty('--drift',(-30+Math.random()*60).toFixed(0)+'px');
-      shot.style.setProperty('--scale',(0.78+Math.random()*0.25).toFixed(2));
-      shot.style.setProperty('--r0',(-20+Math.random()*40).toFixed(0)+'deg');
-      shot.style.setProperty('--r1',(90+Math.random()*120).toFixed(0)+'deg');
+      shot.setAttribute('aria-hidden','true');
+      shot.style.left=(1+Math.random()*98).toFixed(2)+'%';
+      shot.style.setProperty('--duration',(9+Math.random()*7).toFixed(2)+'s');
+      shot.style.setProperty('--delay',(-Math.random()*15).toFixed(2)+'s');
+      shot.style.setProperty('--drift',(-45+Math.random()*90).toFixed(0)+'px');
+      shot.style.setProperty('--scale',(0.78+Math.random()*0.55).toFixed(2));
+      shot.style.setProperty('--r0',(-18+Math.random()*36).toFixed(0)+'deg');
+      shot.style.setProperty('--r1',(80+Math.random()*150).toFixed(0)+'deg');
       shotLayer.appendChild(shot);
     }
   }
 
+  var core=document.createElement('span');
+  core.className='tq-cursor-core';
+  core.setAttribute('aria-hidden','true');
+  core.textContent='✦';
+  document.body.appendChild(core);
+
   var lastSpark=0;
-  function makeSparkle(x,y){
+  var hideTimer=null;
+
+  function makeSparkle(x,y,index){
     var sp=document.createElement('span');
     sp.className='tq-cursor-sparkle';
     sp.setAttribute('aria-hidden','true');
     sp.textContent=Math.random()>.42?'✦':'✧';
-    sp.style.left=(x+(Math.random()*14-7))+'px';
-    sp.style.top=(y+(Math.random()*14-7))+'px';
-    sp.style.fontSize=(7+Math.random()*8).toFixed(0)+'px';
-    sp.style.setProperty('--x',(-15+Math.random()*30).toFixed(0)+'px');
-    sp.style.setProperty('--y',(-24+Math.random()*14).toFixed(0)+'px');
-    sp.style.setProperty('--rot',(-35+Math.random()*100).toFixed(0)+'deg');
+    sp.style.left=(x+(Math.random()*18-9))+'px';
+    sp.style.top=(y+(Math.random()*18-9))+'px';
+    sp.style.fontSize=(10+Math.random()*9).toFixed(0)+'px';
+    sp.style.setProperty('--x',(-24+Math.random()*48).toFixed(0)+'px');
+    sp.style.setProperty('--y',(-34+Math.random()*22).toFixed(0)+'px');
+    sp.style.setProperty('--rot',(-50+Math.random()*130).toFixed(0)+'deg');
+    sp.style.animationDelay=(index*8)+'ms';
     document.body.appendChild(sp);
-    window.setTimeout(function(){ if(sp.parentNode) sp.parentNode.removeChild(sp); },700);
+    window.setTimeout(function(){
+      if(sp.parentNode) sp.parentNode.removeChild(sp);
+    },850);
   }
 
-  window.addEventListener('pointermove',function(e){
+  function moveEffects(e){
+    var x=e.clientX, y=e.clientY;
+    if(typeof x!=='number'||typeof y!=='number') return;
+
+    core.style.left=x+'px';
+    core.style.top=y+'px';
+    core.classList.add('is-moving');
+
+    clearTimeout(hideTimer);
+    hideTimer=setTimeout(function(){core.classList.remove('is-moving');},140);
+
     var now=performance.now();
-    if(now-lastSpark<28) return;
+    if(now-lastSpark<22) return;
     lastSpark=now;
+
     var count=3+Math.floor(Math.random()*3);
-    for(var i=0;i<count;i++) makeSparkle(e.clientX,e.clientY);
-  },{passive:true});
+    for(var i=0;i<count;i++) makeSparkle(x,y,i);
+  }
+
+  if('PointerEvent' in window){
+    window.addEventListener('pointermove',moveEffects,{passive:true});
+  }else{
+    window.addEventListener('mousemove',moveEffects,{passive:true});
+  }
 })();
 </script>
 <script>
