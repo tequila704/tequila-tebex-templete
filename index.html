@@ -64,13 +64,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .resource-card{background:linear-gradient(180deg,rgba(24,24,27,.98),rgba(7,8,9,.98));border:1px solid rgba(244,189,54,.28);border-radius:22px;padding:20px;min-height:275px;display:flex;flex-direction:column;position:relative;overflow:hidden;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.035);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease;animation:breatheGlow 3.2s ease-in-out infinite;}
 .resource-card::before{content:"";position:absolute;top:-130%;left:-45%;width:42%;height:360%;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,244,207,.14),rgba(255,255,255,0));transform:rotate(18deg);animation:shimmerSweep 4.8s linear infinite;pointer-events:none;}
-50%{opacity:.9;filter:drop-shadow(0 0 8px rgba(244,189,54,.25))}}
 .resource-card:hover,.resource-card:focus-visible{transform:translateY(-7px) scale(1.018);border-color:rgba(243,191,59,.85);background:linear-gradient(180deg,rgba(30,29,27,.98),rgba(9,9,10,.98));box-shadow:0 0 0 2px rgba(243,191,59,.18) inset,0 0 22px rgba(243,191,59,.18);}
-  50%{transform:translateY(-12px) scale(1.028);box-shadow:0 28px 62px rgba(0,0,0,.58),0 0 24px rgba(244,189,54,.18),0 0 34px rgba(255,60,174,.12)}
-}
 .resource-card::after{content:"";position:absolute;inset:auto 10% 8% 10%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,77,188,.85),rgba(243,191,59,.95),transparent);opacity:.55;animation:pulseLine 2.4s ease-in-out infinite;pointer-events:none;}
 .resource-card:hover:after{animation-duration:1.7s}
-28%{opacity:1}58%{left:118%;opacity:.95}72%,100%{left:118%;opacity:0}}
 .card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.category-symbol{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#3a2508,#17120d 58%,#0b0b0c);border:1px solid rgba(244,189,54,.44);color:#ffd86b;font-size:1.28rem;font-weight:1000;box-shadow:0 8px 24px rgba(244,189,54,.12)}.save-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:#0d0e10;color:#a99e89;font-size:1rem;position:relative;z-index:3}.save-btn.saved{color:#ffd563;border-color:rgba(244,189,54,.45);background:rgba(244,189,54,.08)}
 @keyframes shimmerSweep{
   0%{transform:translateX(-220%) rotate(18deg);opacity:0;}
@@ -212,6 +208,45 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   </div>
 </section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script id="tequila-original-effects">
+(function(){
+  var shotLayer=document.getElementById('tq-shot-stream');
+  if(shotLayer && !shotLayer.dataset.ready){
+    shotLayer.dataset.ready='1';
+    var shotIcons=['🥃','🥃','🥃','🥃','🥃'];
+    for(var i=0;i<16;i++){
+      var s=document.createElement('span');
+      s.className='tq-shot';
+      s.textContent=shotIcons[i%shotIcons.length];
+      s.style.left=(Math.random()*100).toFixed(2)+'%';
+      s.style.fontSize=(16+Math.random()*16).toFixed(0)+'px';
+      s.style.animationDuration=(9+Math.random()*8).toFixed(2)+'s';
+      s.style.animationDelay=(-Math.random()*16).toFixed(2)+'s';
+      s.style.setProperty('--drift',((-40+Math.random()*80).toFixed(0))+'px');
+      shotLayer.appendChild(s);
+    }
+  }
+  var lastSpark=0;
+  document.addEventListener('pointermove',function(e){
+    var now=Date.now();
+    if(now-lastSpark<18) return;
+    lastSpark=now;
+    var count=3+Math.floor(Math.random()*3);
+    for(var i=0;i<count;i++){
+      var sp=document.createElement('span');
+      sp.className='tq-cursor-sparkle';
+      sp.textContent=(Math.random()>.45?'✦':'✧');
+      sp.style.left=(e.clientX+(Math.random()*20-10))+'px';
+      sp.style.top=(e.clientY+(Math.random()*20-10))+'px';
+      sp.style.fontSize=(9+Math.random()*12).toFixed(0)+'px';
+      sp.style.setProperty('--x',(-24+Math.random()*48).toFixed(0)+'px');
+      sp.style.setProperty('--y',(-34+Math.random()*28).toFixed(0)+'px');
+      document.body.appendChild(sp);
+      setTimeout((function(node){return function(){node.remove();};})(sp),820);
+    }
+  },{passive:true});
+})();
+</script>
 <script>
 (() => {
   const STORE = 'https://tequila.tebex.io/';
@@ -225,43 +260,6 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 
   const $ = (s,r=document)=>r.querySelector(s);
   const all = (s,r=document)=>[...r.querySelectorAll(s)];
-  (function(){
-    var shotLayer=document.getElementById('tq-shot-stream');
-    if(shotLayer && !shotLayer.dataset.ready){
-      shotLayer.dataset.ready='1';
-      var shotIcons=['🥃','🥃','🥃','🥃','🥃'];
-      for(var i=0;i<16;i++){
-        var s=document.createElement('span');
-        s.className='tq-shot';
-        s.textContent=shotIcons[i%shotIcons.length];
-        s.style.left=(Math.random()*100).toFixed(2)+'%';
-        s.style.fontSize=(16+Math.random()*16).toFixed(0)+'px';
-        s.style.animationDuration=(9+Math.random()*8).toFixed(2)+'s';
-        s.style.animationDelay=(-Math.random()*16).toFixed(2)+'s';
-        s.style.setProperty('--drift',((-40+Math.random()*80).toFixed(0))+'px');
-        shotLayer.appendChild(s);
-      }
-    }
-    var lastSpark=0;
-    document.addEventListener('pointermove',function(e){
-      var now=Date.now();
-      if(now-lastSpark<18) return;
-      lastSpark=now;
-      var count=3+Math.floor(Math.random()*3);
-      for(var i=0;i<count;i++){
-        var sp=document.createElement('span');
-        sp.className='tq-cursor-sparkle';
-        sp.textContent=(Math.random()>.45?'✦':'✧');
-        sp.style.left=(e.clientX+(Math.random()*20-10))+'px';
-        sp.style.top=(e.clientY+(Math.random()*20-10))+'px';
-        sp.style.fontSize=(9+Math.random()*12).toFixed(0)+'px';
-        sp.style.setProperty('--x',(-24+Math.random()*48).toFixed(0)+'px');
-        sp.style.setProperty('--y',(-34+Math.random()*28).toFixed(0)+'px');
-        document.body.appendChild(sp);
-        setTimeout((function(node){return function(){node.remove();};})(sp),820);
-      }
-    },{passive:true});
-  })();
   const toast = $('#toast');
   let activeFilter = 'all';
   let searchTerm = '';
