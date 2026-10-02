@@ -340,6 +340,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   for(let i=0;i<16;i++){
     const s=document.createElement('span');s.className='falling-shot';s.textContent='🥃';s.style.left=(Math.random()*100)+'%';s.style.fontSize=(16+Math.random()*12)+'px';s.style.animationDuration=(9+Math.random()*8)+'s';s.style.animationDelay=(-Math.random()*14)+'s';s.style.setProperty('--drift',(-55+Math.random()*110)+'px');effects.appendChild(s);
   }
+  document.documentElement.dataset.effectsReady='true';
   const cursorCore=$('#cursorCore');
   let last=0;
   const starSet=['✦','✧','★','✶','✷'];
