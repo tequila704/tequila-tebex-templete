@@ -22,8 +22,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .effects{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
 .falling-shot{position:absolute;top:-8vh;font-size:18px;opacity:.18;filter:drop-shadow(0 0 8px rgba(255,60,174,.28));animation:fall linear infinite;user-select:none}
 @keyframes fall{0%{transform:translate3d(0,-8vh,0) rotate(0deg);opacity:0}10%{opacity:.18}90%{opacity:.18}100%{transform:translate3d(var(--drift),112vh,0) rotate(220deg);opacity:0}}
-.sparkle{position:fixed;pointer-events:none;z-index:130;color:var(--pink);text-shadow:0 0 7px rgba(255,60,174,.9),0 0 18px rgba(255,60,174,.55);animation:spark .72s ease-out forwards}
-@keyframes spark{to{opacity:0;transform:translate(var(--x),var(--y)) scale(1.7) rotate(100deg)}}
+.sparkle{position:fixed;pointer-events:none;z-index:9999;color:var(--pink);font-weight:1000;line-height:1;filter:drop-shadow(0 0 5px rgba(255,60,174,.95));text-shadow:0 0 8px rgba(255,60,174,1),0 0 18px rgba(255,60,174,.85),0 0 30px rgba(255,195,232,.58);animation:spark .78s cubic-bezier(.18,.72,.3,1) forwards;will-change:transform,opacity}
+.sparkle.gold{color:#ffd35f;filter:drop-shadow(0 0 5px rgba(244,189,54,.95));text-shadow:0 0 8px rgba(244,189,54,1),0 0 18px rgba(244,189,54,.78),0 0 30px rgba(255,225,135,.48)}
+@keyframes spark{0%{opacity:1;transform:translate(-50%,-50%) scale(.45) rotate(0deg)}55%{opacity:.95}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.9) rotate(130deg)}}
 .site-header{position:sticky;top:0;z-index:80;background:rgba(4,4,4,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line2)}
 .header-inner{min-height:74px;display:flex;align-items:center;gap:18px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:1000;letter-spacing:.02em;white-space:nowrap}
@@ -66,9 +67,15 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   border:1px solid rgba(244,189,54,.28);border-radius:22px;padding:20px;min-height:275px;
   display:flex;flex-direction:column;position:relative;overflow:hidden;cursor:pointer;
   box-shadow:0 12px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.035);
-  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
-.resource-card:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(244,189,54,.62),transparent 35%,transparent 65%,rgba(255,60,174,.34));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.45;pointer-events:none}
-.resource-card:hover{transform:translateY(-10px) scale(1.025);border-color:rgba(244,189,54,.72);box-shadow:0 28px 70px rgba(0,0,0,.58),0 0 28px rgba(244,189,54,.14),0 0 42px rgba(255,60,174,.08)}
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+  animation:cardIn .58s both,cardFloat 4.6s ease-in-out infinite;
+  animation-delay:var(--enter-delay,0ms),calc(var(--enter-delay,0ms) + .7s);
+  transform-origin:center}
+.resource-card:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(115deg,rgba(244,189,54,.70),transparent 30%,transparent 58%,rgba(255,60,174,.46));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.62;pointer-events:none;animation:borderPulse 2.9s ease-in-out infinite}
+@keyframes borderPulse{0%,100%{opacity:.38;filter:drop-shadow(0 0 0 rgba(244,189,54,0))}50%{opacity:.9;filter:drop-shadow(0 0 8px rgba(244,189,54,.25))}}
+.resource-card:hover{animation-play-state:paused;transform:translateY(-12px) scale(1.035) rotateX(1.2deg);border-color:rgba(244,189,54,.82);box-shadow:0 32px 80px rgba(0,0,0,.62),0 0 34px rgba(244,189,54,.20),0 0 52px rgba(255,60,174,.13)}
+@keyframes cardIn{0%{opacity:0;transform:translateY(28px) scale(.94)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .resource-card:after{content:"";position:absolute;right:-42px;top:-48px;width:175px;height:175px;border-radius:50%;background:radial-gradient(circle,rgba(255,60,174,.20),rgba(244,189,54,.07) 42%,transparent 70%);pointer-events:none;transition:.22s ease}
 .resource-card:hover:after{transform:scale(1.18);opacity:1}
 .card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.category-symbol{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#3a2508,#17120d 58%,#0b0b0c);border:1px solid rgba(244,189,54,.44);color:#ffd86b;font-size:1.28rem;font-weight:1000;box-shadow:0 8px 24px rgba(244,189,54,.12)}.save-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:#0d0e10;color:#a99e89;font-size:1rem;position:relative;z-index:3}.save-btn.saved{color:#ffd563;border-color:rgba(244,189,54,.45);background:rgba(244,189,54,.08)}
@@ -87,7 +94,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .back-top{position:fixed;right:20px;bottom:20px;z-index:70;width:44px;height:44px;border-radius:50%;border:1px solid rgba(244,189,54,.34);background:#111214;color:var(--gold);opacity:0;pointer-events:none;transition:.2s}.back-top.show{opacity:1;pointer-events:auto}
 @media(max-width:1000px){.nav{position:absolute;left:3vw;right:3vw;top:68px;display:none;flex-direction:column;align-items:stretch;background:#0a0b0c;border:1px solid var(--line2);border-radius:15px;padding:9px}.nav.open{display:flex}.nav a,.nav button{text-align:left}.menu-btn{display:block}.header-actions .login-link{display:none}.browser{grid-template-columns:1fr}.tools{position:static}.filter-stack{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.trust{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.shell{width:min(94vw,1500px)}.header-inner{min-height:66px}.brand{font-size:.92rem}.brand-mark{width:38px;height:38px}.header-actions .store-link{display:none}.hero{padding-top:14px}.hero-image{height:220px;object-position:center}.trust{grid-template-columns:1fr}.section{padding:22px 0}.section-head{align-items:start;flex-direction:column}.filter-stack{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr}.category-track{animation-duration:30s}.ticker-card{width:245px}.card-actions{flex-direction:column}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}.category-track,.falling-shot,.sparkle{animation:none!important}.resource-card:hover,.ticker-card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}.category-track{animation:none!important}}
 </style>
 </head>
 <body>
@@ -240,9 +247,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   }
   track.innerHTML = categories.map(tickerCard).join('') + categories.map(tickerCard).join('');
 
-  function card(c){
+  function card(c,index=0){
     const isSaved=saved.has(c.id);
-    return `<article class="resource-card" data-id="${c.id}" data-preview="${c.id}" tabindex="0" role="button" aria-label="Open ${c.name} package details">
+    return `<article class="resource-card" style="--enter-delay:${index*110}ms" data-id="${c.id}" data-preview="${c.id}" tabindex="0" role="button" aria-label="Open ${c.name} package details">
       <div class="card-top"><div class="category-symbol">${c.symbol}</div><button class="save-btn ${isSaved?'saved':''}" data-save="${c.id}" aria-pressed="${isSaved}" aria-label="${isSaved?'Unsave':'Save'} ${c.name}">★</button></div>
       <h3>${c.name}</h3><p>${c.desc}</p>
       <div class="tags">${c.tags.map(t=>`<span class="tag">${t.toUpperCase()}</span>`).join('')}</div>
@@ -257,7 +264,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
       const matchesFilter=activeFilter==='all' || (activeFilter==='saved' ? saved.has(c.id) : c.id===activeFilter);
       return matchesSearch && matchesFilter;
     });
-    $('#resourceGrid').innerHTML=visible.map(card).join('');
+    $('#resourceGrid').innerHTML=visible.map((item,index)=>card(item,index)).join('');
     $('#resultCount').textContent=visible.length;
     $('#searchState').textContent=q ? `Search: “${searchTerm.trim()}”` : (activeFilter==='saved'?'Saved only':'Ready');
     $('#emptyState').style.display=visible.length?'none':'block';
@@ -322,14 +329,27 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   window.addEventListener('scroll',()=>backTop.classList.toggle('show',window.scrollY>500),{passive:true});
   backTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-    const effects=$('#effects');
-    for(let i=0;i<13;i++){
-      const s=document.createElement('span');s.className='falling-shot';s.textContent='🥃';s.style.left=(Math.random()*100)+'%';s.style.animationDuration=(10+Math.random()*9)+'s';s.style.animationDelay=(-Math.random()*14)+'s';s.style.setProperty('--drift',(-40+Math.random()*80)+'px');effects.appendChild(s);
-    }
-    let last=0;
-    document.addEventListener('pointermove',e=>{const now=performance.now();if(now-last<36)return;last=now;const sp=document.createElement('span');sp.className='sparkle';sp.textContent=Math.random()>.5?'✦':'✧';sp.style.left=(e.clientX+4)+'px';sp.style.top=(e.clientY+4)+'px';sp.style.setProperty('--x',(-15+Math.random()*30)+'px');sp.style.setProperty('--y',(-12-Math.random()*20)+'px');document.body.appendChild(sp);setTimeout(()=>sp.remove(),760);},{passive:true});
+  const effects=$('#effects');
+  for(let i=0;i<16;i++){
+    const s=document.createElement('span');s.className='falling-shot';s.textContent='🥃';s.style.left=(Math.random()*100)+'%';s.style.fontSize=(16+Math.random()*12)+'px';s.style.animationDuration=(9+Math.random()*8)+'s';s.style.animationDelay=(-Math.random()*14)+'s';s.style.setProperty('--drift',(-55+Math.random()*110)+'px');effects.appendChild(s);
   }
+  let last=0;
+  const starSet=['✦','✧','★','✶'];
+  document.addEventListener('pointermove',e=>{
+    const now=performance.now();if(now-last<18)return;last=now;
+    for(let i=0;i<3;i++){
+      const sp=document.createElement('span');
+      sp.className='sparkle'+(Math.random()>.72?' gold':'');
+      sp.textContent=starSet[Math.floor(Math.random()*starSet.length)];
+      sp.style.left=(e.clientX+(Math.random()*18-9))+'px';
+      sp.style.top=(e.clientY+(Math.random()*18-9))+'px';
+      sp.style.fontSize=(10+Math.random()*11)+'px';
+      sp.style.setProperty('--x',(-28+Math.random()*56)+'px');
+      sp.style.setProperty('--y',(-10-Math.random()*34)+'px');
+      document.body.appendChild(sp);
+      setTimeout(()=>sp.remove(),840);
+    }
+  },{passive:true});
 })();
 </script>
 </body>
