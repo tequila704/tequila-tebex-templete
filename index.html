@@ -224,11 +224,72 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   ];
 
   const $ = (s,r=document)=>r.querySelector(s);
-  const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+  const $ = (s,r=document)=>[...r.querySelectorAll(s)];
+  // Cursor + visual effects start before the store UI so later UI errors cannot block them.
+  (() => {
+    const effects=document.getElementById('effects');
+    const cursor=document.getElementById('cursorCore');
+    if(!effects || !cursor) return;
+
+    for(let i=0;i<16;i++){
+      const shot=document.createElement('span');
+      shot.className='falling-shot';
+      shot.textContent='🥃';
+      shot.style.left=(Math.random()*100)+'%';
+      shot.style.fontSize=(16+Math.random()*12)+'px';
+      shot.style.animationDuration=(9+Math.random()*8)+'s';
+      shot.style.animationDelay=(-Math.random()*14)+'s';
+      shot.style.setProperty('--drift',(-55+Math.random()*110)+'px');
+      effects.appendChild(shot);
+    }
+
+    const starGlyphs=['✦','✧','★','✶','✷'];
+    let last=0;
+
+    function spawnStar(x,y,burst=false){
+      const star=document.createElement('span');
+      star.className='sparkle'+(Math.random()>.66?' gold':'');
+      star.textContent=starGlyphs[Math.floor(Math.random()*starGlyphs.length)];
+      star.style.left=(x+(Math.random()*(burst?30:18)-(burst?15:9)))+'px';
+      star.style.top=(y+(Math.random()*(burst?30:18)-(burst?15:9)))+'px';
+      star.style.fontSize=((burst?14:11)+Math.random()*(burst?15:11))+'px';
+      star.style.setProperty('--x',((-1+Math.random()*2)*(burst?64:36))+'px');
+      star.style.setProperty('--y',(-14-Math.random()*(burst?58:38))+'px');
+      document.body.appendChild(star);
+      setTimeout(()=>star.remove(),950);
+    }
+
+    function follow(e){
+      cursor.style.left=e.clientX+'px';
+      cursor.style.top=e.clientY+'px';
+      cursor.style.opacity='1';
+      const now=performance.now();
+      if(now-last<18) return;
+      last=now;
+      for(let i=0;i<4;i++) spawnStar(e.clientX,e.clientY,false);
+    }
+
+    document.addEventListener('mousemove',follow,{passive:true});
+    document.addEventListener('pointermove',follow,{passive:true});
+    document.addEventListener('mousedown',e=>{
+      for(let i=0;i<16;i++) spawnStar(e.clientX,e.clientY,true);
+    },{passive:true});
+    document.addEventListener('pointerdown',e=>{
+      for(let i=0;i<16;i++) spawnStar(e.clientX,e.clientY,true);
+    },{passive:true});
+    document.addEventListener('mouseleave',()=>cursor.style.opacity='0');
+    document.documentElement.setAttribute('data-effects-ready','yes');
+  })();
   const toast = $('#toast');
   let activeFilter = 'all';
   let searchTerm = '';
-  let saved = new Set(JSON.parse(localStorage.getItem('tequila5m:savedCategories') || '[]'));
+  let saved = new Set();
+  try{
+    const stored=JSON.parse(localStorage.getItem('tequila5m:savedCategories') || '[]');
+    if(Array.isArray(stored)) saved=new Set(stored);
+  }catch(e){
+    localStorage.removeItem('tequila5m:savedCategories');
+  }
 
   function showToast(message){
     toast.textContent = message;
@@ -307,20 +368,39 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   });
 
   function bindCardActions(){
-    $('[data-save]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();
-      const id=btn.dataset.save;
-      if(saved.has(id)){saved.delete(id);showToast('Removed from saved.');}else{saved.add(id);showToast('Saved in this browser.');}
-      localStorage.setItem('tequila5m:savedCategories',JSON.stringify([...saved]));
-      render();
-    }));
-    $('[data-preview-btn]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();openPackage(btn.dataset.previewBtn);}));
-    $('.resource-card').forEach(card=>{
-      card.addEventListener('click',e=>{if(e.target.closest('a,button'))return;openPackage(card.dataset.preview);});
-      card.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('a,button')){e.preventDefault();openPackage(card.dataset.preview);}});
+    document.querySelectorAll('[data-save]').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.stopPropagation();
+        const id=btn.dataset.save;
+        if(saved.has(id)){saved.delete(id);showToast('Removed from saved.');}
+        else{saved.add(id);showToast('Saved in this browser.');}
+        localStorage.setItem('tequila5m:savedCategories',JSON.stringify([...saved]));
+        render();
+      });
+    });
+
+    document.querySelectorAll('[data-preview-btn]').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.stopPropagation();
+        openPackage(btn.dataset.previewBtn);
+      });
+    });
+
+    document.querySelectorAll('.resource-card').forEach(card=>{
+      card.addEventListener('click',e=>{
+        if(e.target.closest('a,button')) return;
+        openPackage(card.dataset.preview);
+      });
+      card.addEventListener('keydown',e=>{
+        if((e.key==='Enter'||e.key===' ')&&!e.target.closest('a,button')){
+          e.preventDefault();
+          openPackage(card.dataset.preview);
+        }
+      });
     });
   }
 
-  $$('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  $('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
     activeFilter=btn.dataset.filter;
     $$('.filter-btn').forEach(b=>b.classList.toggle('active',b===btn));
     render();
@@ -336,37 +416,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   window.addEventListener('scroll',()=>backTop.classList.toggle('show',window.scrollY>500),{passive:true});
   backTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 
-  const effects=$('#effects');
-  for(let i=0;i<16;i++){
-    const s=document.createElement('span');s.className='falling-shot';s.textContent='🥃';s.style.left=(Math.random()*100)+'%';s.style.fontSize=(16+Math.random()*12)+'px';s.style.animationDuration=(9+Math.random()*8)+'s';s.style.animationDelay=(-Math.random()*14)+'s';s.style.setProperty('--drift',(-55+Math.random()*110)+'px');effects.appendChild(s);
-  }
-  document.documentElement.dataset.effectsReady='true';
-  const cursorCore=$('#cursorCore');
-  let last=0;
-  const starSet=['✦','✧','★','✶','✷'];
-  function makeStar(x,y,burst=false){
-    const sp=document.createElement('span');
-    sp.className='sparkle'+(Math.random()>.66?' gold':'');
-    sp.textContent=starSet[Math.floor(Math.random()*starSet.length)];
-    sp.style.left=(x+(Math.random()*(burst?30:18)-(burst?15:9)))+'px';
-    sp.style.top=(y+(Math.random()*(burst?30:18)-(burst?15:9)))+'px';
-    sp.style.fontSize=((burst?12:10)+Math.random()*(burst?15:11))+'px';
-    sp.style.setProperty('--x',((-1+(Math.random()*2))*(burst?58:34))+'px');
-    sp.style.setProperty('--y',((-12-Math.random()*(burst?52:34)))+'px');
-    document.body.appendChild(sp);
-    setTimeout(()=>sp.remove(),900);
-  }
-  document.addEventListener('pointermove',e=>{
-    cursorCore.style.left=e.clientX+'px';
-    cursorCore.style.top=e.clientY+'px';
-    const now=performance.now();if(now-last<14)return;last=now;
-    for(let i=0;i<4;i++)makeStar(e.clientX,e.clientY,false);
-  },{passive:true});
-  document.addEventListener('pointerdown',e=>{
-    for(let i=0;i<14;i++)makeStar(e.clientX,e.clientY,true);
-  },{passive:true});
-  document.addEventListener('mouseleave',()=>cursorCore.style.opacity='0');
-  document.addEventListener('mouseenter',()=>cursorCore.style.opacity='1');
+
 })();
 </script>
 </body>
