@@ -23,12 +23,8 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .tq-shot-stream{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:12;}
 .tq-shot{position:absolute;top:-12vh;left:0;opacity:.26;filter:drop-shadow(0 0 10px rgba(255,77,188,.18)) drop-shadow(0 0 16px rgba(243,191,59,.14));user-select:none;animation-name:tqShotFallPreview;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform,opacity;}
 @keyframes tqShotFallPreview{0%{transform:translate3d(0,-12vh,0) rotate(0deg) scale(.92);opacity:0}8%{opacity:.28}50%{opacity:.33}100%{transform:translate3d(var(--drift,0px),118vh,0) rotate(180deg) scale(1.08);opacity:0}}
-8%{opacity:.28}50%{opacity:.33}100%{transform:translate3d(var(--drift,0px),118vh,0) rotate(180deg) scale(1.08);opacity:0}}10%{opacity:.18}90%{opacity:.18}100%{transform:translate3d(var(--drift),112vh,0) rotate(220deg);opacity:0}}
 .tq-cursor-sparkle{position:fixed;left:0;top:0;transform:translate(-50%,-50%);pointer-events:none;z-index:120;font-weight:900;color:#ff4dbc;text-shadow:0 0 6px rgba(255,77,188,.95),0 0 16px rgba(255,77,188,.55),0 0 24px rgba(255,185,232,.45);mix-blend-mode:screen;animation:tqSparklePreview .72s ease-out forwards;will-change:transform,opacity;}
 @keyframes tqSparklePreview{0%{opacity:1;transform:translate(-50%,-50%) scale(.45) rotate(0deg)}100%{opacity:0;transform:translate(calc(-50% + var(--x,0px)),calc(-50% + var(--y,-22px))) scale(1.45) rotate(85deg)}}
-100%{opacity:0;transform:translate(calc(-50% + var(--x,0px)),calc(-50% + var(--y,-22px))) scale(1.45) rotate(85deg)}}
-55%{opacity:.95}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.9) rotate(130deg)}}
-to{scale:1.18;filter:brightness(1.4)}}
 .site-header{position:sticky;top:0;z-index:80;background:rgba(4,4,4,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line2)}
 .header-inner{min-height:74px;display:flex;align-items:center;gap:18px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:1000;letter-spacing:.02em;white-space:nowrap}
