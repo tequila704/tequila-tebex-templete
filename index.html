@@ -20,14 +20,12 @@ button{cursor:pointer}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .shell{width:min(1500px,94vw);margin:auto}
 .effects{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
-.falling-shot{position:absolute;top:-8vh;font-size:18px;opacity:.18;filter:drop-shadow(0 0 8px rgba(255,60,174,.28));animation:fall linear infinite;user-select:none}
-@keyframes fall{0%{transform:translate3d(0,-8vh,0) rotate(0deg);opacity:0}10%{opacity:.18}90%{opacity:.18}100%{transform:translate3d(var(--drift),112vh,0) rotate(220deg);opacity:0}}
-.sparkle{position:fixed;pointer-events:none;z-index:9999;color:var(--pink);font-weight:1000;line-height:1;filter:drop-shadow(0 0 5px rgba(255,60,174,.95));text-shadow:0 0 8px rgba(255,60,174,1),0 0 18px rgba(255,60,174,.85),0 0 30px rgba(255,195,232,.58);animation:spark .78s cubic-bezier(.18,.72,.3,1) forwards;will-change:transform,opacity}
-.sparkle.gold{color:#ffd35f;filter:drop-shadow(0 0 5px rgba(244,189,54,.95));text-shadow:0 0 8px rgba(244,189,54,1),0 0 18px rgba(244,189,54,.78),0 0 30px rgba(255,225,135,.48)}
-@keyframes spark{0%{opacity:1;transform:translate(-50%,-50%) scale(.45) rotate(0deg)}55%{opacity:.95}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.9) rotate(130deg)}}
-.cursor-core{position:fixed;left:0;top:0;z-index:10000;pointer-events:none;font-size:22px;color:#ff4fbd;text-shadow:0 0 8px #ff4fbd,0 0 18px rgba(255,79,189,.95),0 0 32px rgba(255,79,189,.55);transform:translate(-50%,-50%);will-change:left,top;animation:cursorTwinkle .8s ease-in-out infinite alternate}
-.cursor-core:after{content:"✦";position:absolute;left:13px;top:-9px;font-size:10px;color:#ffd45f;text-shadow:0 0 8px rgba(244,189,54,1),0 0 16px rgba(244,189,54,.75)}
-@keyframes cursorTwinkle{from{scale:.86;filter:brightness(.95)}to{scale:1.18;filter:brightness(1.4)}}
+.falling-shot{position:absolute;top:-12vh;left:0;opacity:.26;filter:drop-shadow(0 0 10px rgba(255,77,188,.18)) drop-shadow(0 0 16px rgba(243,191,59,.14));user-select:none;animation:fall linear infinite;will-change:transform,opacity}
+@keyframes fall{0%{transform:translate3d(0,-12vh,0) rotate(0deg) scale(.92);opacity:0}8%{opacity:.28}50%{opacity:.33}100%{transform:translate3d(var(--drift,0px),118vh,0) rotate(180deg) scale(1.08);opacity:0}}10%{opacity:.18}90%{opacity:.18}100%{transform:translate3d(var(--drift),112vh,0) rotate(220deg);opacity:0}}
+.sparkle{position:fixed;left:0;top:0;transform:translate(-50%,-50%);pointer-events:none;z-index:120;font-weight:900;color:#ff4dbc;text-shadow:0 0 6px rgba(255,77,188,.95),0 0 16px rgba(255,77,188,.55),0 0 24px rgba(255,185,232,.45);mix-blend-mode:screen;animation:spark .72s ease-out forwards;will-change:transform,opacity}
+@keyframes spark{0%{opacity:1;transform:translate(-50%,-50%) scale(.45) rotate(0deg)}100%{opacity:0;transform:translate(calc(-50% + var(--x,0px)),calc(-50% + var(--y,-22px))) scale(1.45) rotate(85deg)}}
+55%{opacity:.95}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.9) rotate(130deg)}}
+to{scale:1.18;filter:brightness(1.4)}}
 .site-header{position:sticky;top:0;z-index:80;background:rgba(4,4,4,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line2)}
 .header-inner{min-height:74px;display:flex;align-items:center;gap:18px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:1000;letter-spacing:.02em;white-space:nowrap}
@@ -99,13 +97,12 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .toast{position:fixed;left:50%;bottom:25px;z-index:150;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#111214;border:1px solid rgba(244,189,54,.38);color:#fff4d8;padding:12px 16px;border-radius:12px;box-shadow:0 18px 45px rgba(0,0,0,.5);transition:.2s ease}.toast.show{opacity:1;transform:translate(-50%,0)}
 .back-top{position:fixed;right:20px;bottom:20px;z-index:70;width:44px;height:44px;border-radius:50%;border:1px solid rgba(244,189,54,.34);background:#111214;color:var(--gold);opacity:0;pointer-events:none;transition:.2s}.back-top.show{opacity:1;pointer-events:auto}
 @media(max-width:1000px){.nav{position:absolute;left:3vw;right:3vw;top:68px;display:none;flex-direction:column;align-items:stretch;background:#0a0b0c;border:1px solid var(--line2);border-radius:15px;padding:9px}.nav.open{display:flex}.nav a,.nav button{text-align:left}.menu-btn{display:block}.header-actions .login-link{display:none}.browser{grid-template-columns:1fr}.tools{position:static}.filter-stack{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.trust{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:680px){.cursor-core{display:none}.shell{width:min(94vw,1500px)}.header-inner{min-height:66px}.brand{font-size:.92rem}.brand-mark{width:38px;height:38px}.header-actions .store-link{display:none}.hero{padding-top:14px}.hero-image{height:220px;object-position:center}.trust{grid-template-columns:1fr}.section{padding:22px 0}.section-head{align-items:start;flex-direction:column}.filter-stack{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr}.category-track{animation-duration:30s}.ticker-card{width:245px}.card-actions{flex-direction:column}}
+@media(max-width:680px){.shell{width:min(94vw,1500px)}.header-inner{min-height:66px}.brand{font-size:.92rem}.brand-mark{width:38px;height:38px}.header-actions .store-link{display:none}.hero{padding-top:14px}.hero-image{height:220px;object-position:center}.trust{grid-template-columns:1fr}.section{padding:22px 0}.section-head{align-items:start;flex-direction:column}.filter-stack{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr}.category-track{animation-duration:30s}.ticker-card{width:245px}.card-actions{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}.category-track{animation:none!important}}
 </style>
 </head>
 <body>
 <div class="effects" id="effects" aria-hidden="true"></div>
-<div class="cursor-core" id="cursorCore" aria-hidden="true">★</div>
 <header class="site-header">
   <div class="shell header-inner">
     <a class="brand" href="#home" aria-label="TEQUILA5M home"><span class="brand-mark">T5</span><strong>TEQUILA<span>5M</span></strong></a>
@@ -225,59 +222,44 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 
   const $ = (s,r=document)=>r.querySelector(s);
   const all = (s,r=document)=>[...r.querySelectorAll(s)];
-  // Cursor + visual effects start before the store UI so later UI errors cannot block them.
+  // Clean original TEQUILA5M effects.
   (() => {
     const effects=document.getElementById('effects');
-    const cursor=document.getElementById('cursorCore');
-    if(!effects || !cursor) return;
+    if(!effects) return;
 
     for(let i=0;i<16;i++){
       const shot=document.createElement('span');
       shot.className='falling-shot';
       shot.textContent='🥃';
-      shot.style.left=(Math.random()*100)+'%';
-      shot.style.fontSize=(16+Math.random()*12)+'px';
-      shot.style.animationDuration=(9+Math.random()*8)+'s';
-      shot.style.animationDelay=(-Math.random()*14)+'s';
-      shot.style.setProperty('--drift',(-55+Math.random()*110)+'px');
+      shot.style.left=(Math.random()*100).toFixed(2)+'%';
+      shot.style.fontSize=(16+Math.random()*16).toFixed(0)+'px';
+      shot.style.animationDuration=(9+Math.random()*8).toFixed(2)+'s';
+      shot.style.animationDelay=(-Math.random()*16).toFixed(2)+'s';
+      shot.style.setProperty('--drift',((-40+Math.random()*80).toFixed(0))+'px');
       effects.appendChild(shot);
     }
 
-    const starGlyphs=['✦','✧','★','✶','✷'];
-    let last=0;
+    let lastSpark=0;
+    document.addEventListener('pointermove',function(e){
+      const now=Date.now();
+      if(now-lastSpark<18) return;
+      lastSpark=now;
 
-    function spawnStar(x,y,burst=false){
-      const star=document.createElement('span');
-      star.className='sparkle'+(Math.random()>.66?' gold':'');
-      star.textContent=starGlyphs[Math.floor(Math.random()*starGlyphs.length)];
-      star.style.left=(x+(Math.random()*(burst?30:18)-(burst?15:9)))+'px';
-      star.style.top=(y+(Math.random()*(burst?30:18)-(burst?15:9)))+'px';
-      star.style.fontSize=((burst?14:11)+Math.random()*(burst?15:11))+'px';
-      star.style.setProperty('--x',((-1+Math.random()*2)*(burst?64:36))+'px');
-      star.style.setProperty('--y',(-14-Math.random()*(burst?58:38))+'px');
-      document.body.appendChild(star);
-      setTimeout(()=>star.remove(),950);
-    }
-
-    function follow(e){
-      cursor.style.left=e.clientX+'px';
-      cursor.style.top=e.clientY+'px';
-      cursor.style.opacity='1';
-      const now=performance.now();
-      if(now-last<18) return;
-      last=now;
-      for(let i=0;i<4;i++) spawnStar(e.clientX,e.clientY,false);
-    }
-
-    document.addEventListener('mousemove',follow,{passive:true});
-    document.addEventListener('pointermove',follow,{passive:true});
-    document.addEventListener('mousedown',e=>{
-      for(let i=0;i<16;i++) spawnStar(e.clientX,e.clientY,true);
+      const count=3+Math.floor(Math.random()*3);
+      for(let i=0;i<count;i++){
+        const sp=document.createElement('span');
+        sp.className='sparkle';
+        sp.textContent=(Math.random()>.45?'✦':'✧');
+        sp.style.left=(e.clientX+(Math.random()*20-10))+'px';
+        sp.style.top=(e.clientY+(Math.random()*20-10))+'px';
+        sp.style.fontSize=(9+Math.random()*12).toFixed(0)+'px';
+        sp.style.setProperty('--x',(-24+Math.random()*48).toFixed(0)+'px');
+        sp.style.setProperty('--y',(-34+Math.random()*28).toFixed(0)+'px');
+        document.body.appendChild(sp);
+        setTimeout(()=>sp.remove(),820);
+      }
     },{passive:true});
-    document.addEventListener('pointerdown',e=>{
-      for(let i=0;i<16;i++) spawnStar(e.clientX,e.clientY,true);
-    },{passive:true});
-    document.addEventListener('mouseleave',()=>cursor.style.opacity='0');
+
     document.documentElement.setAttribute('data-effects-ready','yes');
   })();
   const toast = $('#toast');
