@@ -3,222 +3,262 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#050505">
-  <meta name="description" content="TEQUILA5M premium FiveM resources — MLOs, scripts, upgrades, free items and weapon packs.">
-  <title>TEQUILA5M — Premium FiveM Resources</title>
+  <meta name="theme-color" content="#070707">
+  <title>TEQUILA5M — Premium FiveM Store</title>
+  <meta name="description" content="TEQUILA5M premium FiveM storefront preview.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="effects" aria-hidden="true">
-    <div id="shotRain" class="shot-rain"></div>
-  </div>
+  <div id="shotRain" class="shot-rain" aria-hidden="true"></div>
 
-  <header class="site-header">
-    <a class="brand" href="#home" aria-label="TEQUILA5M home">
-      <span class="brand-mark">T5</span>
-      <span class="brand-copy">
-        <strong>TEQUILA<span>5M</span></strong>
-        <small>PREMIUM FIVEM RESOURCES</small>
-      </span>
+  <header class="topbar">
+    <a class="logo" href="#home" aria-label="TEQUILA5M home">
+      <span class="logo-emblem">T5</span>
+      <span class="logo-copy"><strong>TEQUILA<span>5M</span></strong><small>PREMIUM FIVEM RESOURCES</small></span>
     </a>
 
-    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <button id="mobileMenu" class="mobile-menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
 
-    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+    <nav id="mainNav" class="nav">
       <a class="active" href="#home">Home</a>
-      <a href="#categories">MLOs</a>
-      <a href="#categories">Scripts</a>
-      <a href="#categories">Free Items</a>
-      <a href="#categories">Upgrades</a>
-      <a href="#categories">Guns</a>
+      <a href="#categories" data-filter="mlo">MLOs</a>
+      <a href="#categories" data-filter="script">Scripts</a>
+      <a href="#categories" data-filter="free">Free Items</a>
+      <a href="#categories" data-filter="upgrade">Upgrades</a>
+      <a href="#categories" data-filter="gun">Guns</a>
     </nav>
 
-    <div class="header-actions">
-      <button class="icon-button" id="searchButton" type="button" aria-label="Search">⌕</button>
-      <button class="account-button" id="accountButton" type="button"><span>●</span> tequila5m⌄</button>
-      <button class="basket-button" id="basketButton" type="button">🛒 Basket <span id="basketCount">0</span></button>
+    <div class="top-actions">
+      <button id="searchBtn" class="circle-btn" type="button" aria-label="Search">⌕</button>
+      <button id="accountBtn" class="account-btn" type="button">● tequila5m ⌄</button>
+      <button id="basketBtn" class="basket-btn" type="button">🛒 Basket <span id="basketCount">0</span></button>
     </div>
   </header>
 
   <main id="home">
     <section class="hero">
-      <div class="hero-scene">
-        <div class="hero-glow"></div>
-        <div class="agave" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        </div>
-        <div class="bottle" aria-hidden="true"><span>TEQ</span></div>
-        <div class="hero-copy">
-          <p class="eyebrow">PREMIUM • STREET • CUSTOM</p>
-          <h1><span>TEQUILA</span><b>5M</b></h1>
-          <p class="hero-sub">Premium FiveM resources with a luxury nightlife edge. Built to make your server look different.</p>
-          <div class="hero-cta">
-            <a class="btn gold" href="#featured">Shop Featured</a>
-            <a class="btn dark" href="https://tequila.tebex.io/" target="_blank" rel="noopener">Open Tebex Store</a>
-          </div>
-        </div>
-        <div class="hero-model" aria-hidden="true">
-          <div class="model-head"></div>
-          <div class="model-hair"></div>
-          <div class="model-body"></div>
-          <div class="shot">🥃</div>
-        </div>
-        <div class="neon-script">Good Scripts<br>Better Nights ♥</div>
-        <div class="hero-car" aria-hidden="true"><div class="wheel w1"></div><div class="wheel w2"></div></div>
+      <div class="hero-bg"></div>
+      <div class="hero-grain"></div>
+      <div class="hero-left-glow"></div>
 
-        <a class="discord-card" href="https://discord.com/" target="_blank" rel="noopener">
-          <span class="discord-icon">☁</span>
-          <strong>JOIN OUR<br>DISCORD</strong>
-          <small>Support, previews, drops & more.</small>
-          <b>Join Discord →</b>
-        </a>
+      <div class="agave" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="tequila-bottle" aria-hidden="true">
+        <div class="bottle-cap"></div>
+        <div class="bottle-label"><small>PREMIUM</small><b>TEQUILA</b><span>5M</span></div>
       </div>
 
-      <div class="trust-row">
-        <div><span>💎</span><b>HIGH QUALITY</b><small>Premium resources</small></div>
-        <div><span>⚡</span><b>INSTANT DELIVERY</b><small>Get your items now</small></div>
-        <div><span>🛡</span><b>TRUSTED STORE</b><small>Safe & secure</small></div>
-        <div><span>👥</span><b>5M COMMUNITY</b><small>Creators by players</small></div>
+      <div class="hero-copy">
+        <p class="eyebrow">PREMIUM • STREET • CUSTOM</p>
+        <h1><span>TEQUILA</span><b>5M</b></h1>
+        <p class="hero-sub">Built for serious FiveM servers that want premium scripts, MLOs, packs, upgrades and visuals with a luxury nightlife feel.</p>
+        <div class="hero-buttons">
+          <a class="btn btn-gold" href="#featured">SHOP FEATURED</a>
+          <a class="btn btn-dark" href="https://tequila.tebex.io/" target="_blank" rel="noopener">OPEN TEBEX</a>
+        </div>
+      </div>
+
+      <div class="hero-model" aria-hidden="true"></div>
+      <div class="neon-copy">Good Scripts<br><span>Better Nights</span> ♥</div>
+      <div class="hero-car" aria-hidden="true"></div>
+
+      <a class="discord-card" href="https://discord.com/" target="_blank" rel="noopener">
+        <div class="discord-logo">☁</div>
+        <div><strong>JOIN OUR DISCORD</strong><small>Support, previews, drops & more.</small></div>
+        <span>Join Discord →</span>
+      </a>
+
+      <div class="trust-strip">
+        <div><i>💎</i><span><b>HIGH QUALITY</b><small>Premium resources</small></span></div>
+        <div><i>⚡</i><span><b>INSTANT DELIVERY</b><small>Get your items now</small></span></div>
+        <div><i>🛡</i><span><b>TRUSTED STORE</b><small>Safe & secure</small></span></div>
+        <div><i>👥</i><span><b>5M COMMUNITY</b><small>Built for players</small></span></div>
       </div>
     </section>
 
-    <section class="category-section" id="categories" aria-label="Store categories">
-      <div class="category-viewport">
+    <section id="categories" class="category-zone">
+      <div class="category-head">
+        <div><p>SHOP BY CATEGORY</p><h2>Find your next upgrade</h2></div>
+        <div class="slider-controls">
+          <button id="slidePrev" type="button" aria-label="Previous categories">‹</button>
+          <button id="slideNext" type="button" aria-label="Next categories">›</button>
+        </div>
+      </div>
+
+      <div class="category-viewport" id="categoryViewport">
         <div class="category-track" id="categoryTrack">
-          <button class="category-card mlo" type="button" data-filter="mlo">
-            <span class="category-icon">▥</span><h2>MLOs</h2><p>Custom maps & interiors for your server.</p><i>›</i>
+          <button class="category-card mlo-card" type="button" data-filter="mlo">
+            <div class="category-shade"></div><div class="category-icon">▥</div>
+            <div class="category-text"><h3>MLOs</h3><p>Custom maps & interiors for your server.</p></div><span class="arrow">→</span>
           </button>
-          <button class="category-card scripts" type="button" data-filter="script">
-            <span class="category-icon">&lt;/&gt;</span><h2>Scripts</h2><p>Advanced & optimized FiveM scripts.</p><i>›</i>
+
+          <button class="category-card scripts-card" type="button" data-filter="script">
+            <div class="category-shade"></div><div class="category-icon">&lt;/&gt;</div>
+            <div class="category-text"><h3>Scripts</h3><p>Advanced & optimized FiveM scripts.</p></div><span class="arrow">→</span>
           </button>
-          <button class="category-card free" type="button" data-filter="free">
-            <span class="category-icon">🎁</span><h2>Free Items</h2><p>Free resources for your community.</p><i>›</i>
+
+          <button class="category-card free-card" type="button" data-filter="free">
+            <div class="category-shade"></div><div class="category-icon">🎁</div>
+            <div class="category-text"><h3>Free Items</h3><p>Free resources for your community.</p></div><span class="arrow">→</span>
           </button>
-          <button class="category-card upgrades" type="button" data-filter="upgrade">
-            <span class="category-icon">♛</span><h2>Upgrades</h2><p>Exclusive upgrades and enhancements.</p><i>›</i>
+
+          <button class="category-card upgrade-card" type="button" data-filter="upgrade">
+            <div class="category-shade"></div><div class="category-icon">♛</div>
+            <div class="category-text"><h3>Upgrades</h3><p>Exclusive upgrades & enhancements.</p></div><span class="arrow">→</span>
           </button>
-          <button class="category-card guns" type="button" data-filter="gun">
-            <span class="category-icon">⌁</span><h2>Guns</h2><p>Custom weapons & weapon packs.</p><i>›</i>
+
+          <button class="category-card guns-card" type="button" data-filter="gun">
+            <div class="category-shade"></div><div class="category-icon">GUNS</div>
+            <div class="category-text"><h3>Guns</h3><p>Custom weapons & one-tap packs.</p></div><span class="arrow">→</span>
           </button>
         </div>
       </div>
     </section>
 
-    <section class="store-grid" id="featured">
-      <aside class="sidebar panel">
-        <h3>Categories</h3>
-        <button class="side-link active" data-filter="all" type="button">⌂ <span>Home</span></button>
-        <button class="side-link" data-filter="mlo" type="button">▥ <span>MLOs</span></button>
-        <button class="side-link" data-filter="script" type="button">&lt;/&gt; <span>Scripts</span></button>
-        <button class="side-link" data-filter="free" type="button">🎁 <span>Free Items</span></button>
-        <button class="side-link" data-filter="upgrade" type="button">♛ <span>Upgrades</span></button>
-        <button class="side-link" data-filter="gun" type="button">⌁ <span>Guns</span></button>
+    <section id="featured" class="store-layout">
+      <aside class="left-panel panel">
+        <div class="panel-title"><span>◫</span><h3>Categories</h3></div>
+        <button class="side-filter active" type="button" data-filter="all">⌂ <span>Home</span><i>›</i></button>
+        <button class="side-filter" type="button" data-filter="mlo">▥ <span>MLOs</span><i>›</i></button>
+        <button class="side-filter" type="button" data-filter="script">&lt;/&gt; <span>Scripts</span><i>›</i></button>
+        <button class="side-filter" type="button" data-filter="free">🎁 <span>Free Items</span><i>›</i></button>
+        <button class="side-filter" type="button" data-filter="upgrade">♛ <span>Upgrades</span><i>›</i></button>
+        <button class="side-filter" type="button" data-filter="gun">⌁ <span>Guns</span><i>›</i></button>
 
-        <div class="help-box">
-          <span>🎧</span>
-          <div><b>Need Help?</b><small>Join our Discord for support, custom work, and more.</small></div>
+        <div class="mini-discord">
+          <div class="mini-discord-icon">☁</div>
+          <h4>Need Help?</h4>
+          <p>Join the community for support and previews.</p>
           <a href="https://discord.com/" target="_blank" rel="noopener">Join Discord</a>
         </div>
       </aside>
 
-      <section class="products panel">
-        <div class="section-heading">
-          <h3>☆ Featured Products</h3>
+      <section class="center-panel panel">
+        <div class="section-head">
+          <div><span>★</span><h2>Featured Products</h2></div>
           <button id="viewAll" type="button">View All Products →</button>
         </div>
+
         <div class="product-grid" id="productGrid">
           <article class="product-card" data-category="mlo">
-            <div class="product-art nightclub"><span>FEATURED</span><div>CLUB</div></div>
-            <div class="product-info"><h4>Tequila Nightclub (MLO)</h4><small>Custom MLO</small><strong>$29.99</strong>
-              <button class="add-button" type="button" data-name="Tequila Nightclub (MLO)" data-price="29.99">🛒 Add to Basket</button>
-            </div>
+            <button class="product-main" type="button" data-product="Tequila Nightclub (MLO)">
+              <div class="product-img nightclub-img"><span>FEATURED</span><b>TEQUILA<br>NIGHTCLUB</b></div>
+              <div class="product-copy"><h3>Tequila Nightclub (MLO)</h3><small>Custom MLO</small><strong>$29.99</strong></div>
+            </button>
+            <button class="add-btn" type="button" data-name="Tequila Nightclub (MLO)" data-price="29.99">🛒 Add to Basket</button>
           </article>
 
           <article class="product-card" data-category="script">
-            <div class="product-art ui"><span>BEST SELLER</span><div>UI</div></div>
-            <div class="product-info"><h4>Tequila UI (ESX/QB)</h4><small>Script</small><strong>$24.99</strong>
-              <button class="add-button" type="button" data-name="Tequila UI (ESX/QB)" data-price="24.99">🛒 Add to Basket</button>
-            </div>
+            <button class="product-main" type="button" data-product="Tequila UI (ESX/QB)">
+              <div class="product-img ui-img"><span>BEST SELLER</span><b>TEQUILA<br>UI</b></div>
+              <div class="product-copy"><h3>Tequila UI (ESX/QB)</h3><small>Script</small><strong>$24.99</strong></div>
+            </button>
+            <button class="add-btn" type="button" data-name="Tequila UI (ESX/QB)" data-price="24.99">🛒 Add to Basket</button>
           </article>
 
           <article class="product-card" data-category="upgrade">
-            <div class="product-art cars"><span>NEW</span><div>CAR</div></div>
-            <div class="product-info"><h4>Luxury Car Pack</h4><small>Vehicle Pack</small><strong>$19.99</strong>
-              <button class="add-button" type="button" data-name="Luxury Car Pack" data-price="19.99">🛒 Add to Basket</button>
-            </div>
+            <button class="product-main" type="button" data-product="Luxury Car Pack">
+              <div class="product-img car-img"><span>NEW</span><b>LUXURY<br>CAR PACK</b></div>
+              <div class="product-copy"><h3>Luxury Car Pack</h3><small>Vehicle Pack</small><strong>$19.99</strong></div>
+            </button>
+            <button class="add-btn" type="button" data-name="Luxury Car Pack" data-price="19.99">🛒 Add to Basket</button>
           </article>
 
           <article class="product-card" data-category="gun">
-            <div class="product-art weapons"><span>FEATURED</span><div>GUN</div></div>
-            <div class="product-info"><h4>Tequila Weapon Pack</h4><small>Weapon Pack</small><strong>$14.99</strong>
-              <button class="add-button" type="button" data-name="Tequila Weapon Pack" data-price="14.99">🛒 Add to Basket</button>
-            </div>
+            <button class="product-main" type="button" data-product="Tequila Weapon Pack">
+              <div class="product-img gun-img"><span>FEATURED</span><b>WEAPON<br>PACK</b></div>
+              <div class="product-copy"><h3>Tequila Weapon Pack</h3><small>Weapon Pack</small><strong>$14.99</strong></div>
+            </button>
+            <button class="add-btn" type="button" data-name="Tequila Weapon Pack" data-price="14.99">🛒 Add to Basket</button>
           </article>
 
           <article class="product-card" data-category="free">
-            <div class="product-art freebies"><span>FREE</span><div>FREE</div></div>
-            <div class="product-info"><h4>Starter Freebie Pack</h4><small>Free Item</small><strong>$0.00</strong>
-              <button class="add-button" type="button" data-name="Starter Freebie Pack" data-price="0">🛒 Add to Basket</button>
-            </div>
+            <button class="product-main" type="button" data-product="TEQUILA5M Free Starter Pack">
+              <div class="product-img free-img"><span>FREE</span><b>FREE<br>STARTER PACK</b></div>
+              <div class="product-copy"><h3>TEQUILA5M Free Starter Pack</h3><small>Free Item</small><strong>$0.00</strong></div>
+            </button>
+            <button class="add-btn" type="button" data-name="TEQUILA5M Free Starter Pack" data-price="0">🛒 Add to Basket</button>
           </article>
         </div>
 
         <div class="payments">
-          <div class="payments-title"><h3>▣ Recent Payments</h3><span><i></i> Live Activity</span></div>
-          <div class="payment-row">
-            <div><b>IT</b><p><strong>Itstrulymeli</strong><small>Purchased Tequila Nightclub</small></p><em>$29.99</em></div>
-            <div><b>TA</b><p><strong>T.A.AWorldWide</strong><small>Purchased Luxury Car Pack</small></p><em>$19.99</em></div>
-            <div><b>LS</b><p><strong>LSIOGaming</strong><small>Purchased Tequila UI (ESX/QB)</small></p><em>$24.99</em></div>
-            <div><b>KR</b><p><strong>KingRJ</strong><small>Purchased Weapon Pack</small></p><em>$14.99</em></div>
+          <div class="payments-head"><div><span>▣</span><h3>Recent Payments</h3></div><p><i></i> Live Activity</p></div>
+          <div class="payments-grid">
+            <div class="payment"><span>IT</span><p><b>Itstrulymeli</b><small>Tequila Nightclub</small></p><strong>$29.99</strong></div>
+            <div class="payment"><span>TA</span><p><b>T.A.AWorldWide</b><small>Luxury Car Pack</small></p><strong>$19.99</strong></div>
+            <div class="payment"><span>LS</span><p><b>LSIOGaming</b><small>Tequila UI</small></p><strong>$24.99</strong></div>
+            <div class="payment"><span>KR</span><p><b>KingRJ</b><small>Weapon Pack</small></p><strong>$14.99</strong></div>
           </div>
         </div>
       </section>
 
-      <aside class="about panel">
-        <h3>About TEQUILA5M</h3>
-        <p>Fresh, premium resources for FiveM — custom MLOs, scripts, upgrades and more, built with style and made for serious roleplayers.</p>
-        <div class="about-perks">
-          <div><span>💎</span><p><b>Premium Quality</b><small>Carefully crafted resources</small></p></div>
-          <div><span>⚡</span><p><b>Instant Delivery</b><small>Get your items right away</small></p></div>
-          <div><span>🛡</span><p><b>Trusted & Secure</b><small>Your purchases are safe</small></p></div>
-          <div><span>👥</span><p><b>Growing Community</b><small>Join thousands of customers</small></p></div>
-        </div>
+      <aside class="right-panel panel">
+        <div class="panel-title"><span>◆</span><h3>About TEQUILA5M</h3></div>
+        <p class="about-copy">Fresh premium FiveM resources built with style, optimized for roleplay, and designed to give your city its own identity.</p>
+
+        <div class="perk"><i>💎</i><p><b>Premium Quality</b><small>Carefully crafted resources</small></p></div>
+        <div class="perk"><i>⚡</i><p><b>Instant Delivery</b><small>Get your purchases fast</small></p></div>
+        <div class="perk"><i>🛡</i><p><b>Trusted & Secure</b><small>Shop with confidence</small></p></div>
+        <div class="perk"><i>👥</i><p><b>Growing Community</b><small>Made for FiveM creators</small></p></div>
+
+        <a class="about-cta" href="https://tequila.tebex.io/" target="_blank" rel="noopener">VISIT THE STORE →</a>
       </aside>
     </section>
 
     <section class="newsletter">
-      <div><span>✉</span><p><b>Get Notified</b><small>Be first to know about new releases, exclusives and special offers.</small></p></div>
-      <form id="newsletterForm"><label class="sr-only" for="newsletterEmail">Email address</label><input id="newsletterEmail" type="email" placeholder="Enter your email address" required><button type="submit">→</button></form>
+      <div class="newsletter-copy"><i>✉</i><div><h3>Get Notified</h3><p>Be first to know about new releases, exclusives and special offers.</p></div></div>
+      <form id="newsletterForm"><label class="sr-only" for="email">Email</label><input id="email" type="email" placeholder="Enter your email address" required><button type="submit">→</button></form>
     </section>
   </main>
 
   <footer>
-    <div class="footer-brand"><div class="brand-mark">T5</div><strong>TEQUILA<span>5M</span></strong><p>Premium FiveM resources.<br>Built with style. Driven by community.</p></div>
+    <div class="footer-brand">
+      <div class="logo-emblem">T5</div><strong>TEQUILA<span>5M</span></strong>
+      <p>Premium FiveM resources.<br>Built with style. Driven by community.</p>
+    </div>
     <div><h4>Quick Links</h4><a href="#home">Home</a><a href="#categories">MLOs</a><a href="#categories">Scripts</a></div>
     <div><h4>Store</h4><a href="#categories">Free Items</a><a href="#categories">Upgrades</a><a href="#categories">Guns</a></div>
     <div><h4>Support</h4><a href="https://discord.com/" target="_blank" rel="noopener">Discord</a><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div>
     <div><h4>Legal</h4><a href="#">Refund Policy</a><a href="#">Contact</a></div>
+    <div class="footer-script">Good Scripts. Better Nights.</div>
     <p class="copyright">© 2026 TEQUILA5M. All rights reserved.</p>
   </footer>
 
-  <div class="overlay" id="overlay"></div>
+  <div id="overlay" class="overlay"></div>
 
-  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-    <div class="drawer-head"><div><h3>Your Basket</h3><small>TEQUILA5M Store</small></div><button id="closeCart" type="button">×</button></div>
-    <div class="cart-items" id="cartItems"></div>
-    <div class="drawer-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
-    <div class="drawer-actions"><button id="clearCart" type="button">Clear Basket</button><a href="https://tequila.tebex.io/" target="_blank" rel="noopener">Continue to Tebex →</a></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div><h3>Your Basket</h3><small>TEQUILA5M</small></div>
+      <button id="closeCart" type="button" aria-label="Close basket">×</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
+    <div class="drawer-actions">
+      <button id="clearCart" type="button">Clear Basket</button>
+      <a href="https://tequila.tebex.io/" target="_blank" rel="noopener">Continue to Tebex →</a>
+    </div>
   </aside>
 
   <dialog id="searchDialog">
-    <form method="dialog" class="search-box">
-      <div class="search-head"><h3>Search TEQUILA5M</h3><button value="cancel" aria-label="Close">×</button></div>
-      <input id="searchInput" type="search" placeholder="Search products...">
-      <div id="searchResults"></div>
+    <form method="dialog" class="search-modal">
+      <div class="modal-head"><h3>Search TEQUILA5M</h3><button value="cancel" aria-label="Close">×</button></div>
+      <input id="searchInput" type="search" placeholder="Search MLOs, scripts, guns...">
+      <div id="searchResults" class="search-results"></div>
     </form>
   </dialog>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="productDialog">
+    <div class="product-modal">
+      <button id="closeProduct" class="modal-close" type="button" aria-label="Close">×</button>
+      <p>TEQUILA5M PRODUCT</p>
+      <h2 id="productModalTitle">Product</h2>
+      <span>This preview opens the product details. The final Tebex version can link this directly to the real package page.</span>
+      <a href="https://tequila.tebex.io/" target="_blank" rel="noopener">Open on Tebex →</a>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="script.js"></script>
 </body>
