@@ -27,82 +27,141 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050505}#te
     {label:'DROP 10',video:'H4m2jrB6kV8',packages:[{label:'View Package',id:'7666178'}]}
   ];
 
+  const categoryMedia = [
+    {id:'mlo',match:'3126694'},
+    {id:'scripts',match:'tequila-scripts'},
+    {id:'free',match:'tequila-free-shit'},
+    {id:'upgrades',match:'add-ons-upgrades'},
+    {id:'guns',match:'/guns'}
+  ];
+
   function trailerUrl(drop){
     return `https://www.youtube.com/watch?v=${drop.video}${drop.time ? `&t=${drop.time}` : ''}`;
   }
 
+  async function enhanceCategories(doc){
+    const cards = [...doc.querySelectorAll('.ticker-card')];
+    if(!cards.length) return;
+
+    cards.forEach(card => {
+      if(card.querySelector('.ticker-media')) return;
+      const config = categoryMedia.find(item => card.href.includes(item.match));
+      if(!config) return;
+      const media = doc.createElement('div');
+      media.className = 'ticker-media';
+      media.dataset.categoryImage = config.id;
+      media.setAttribute('aria-hidden','true');
+      const copy = doc.createElement('div');
+      copy.className = 'ticker-copy';
+      [...card.children].forEach(child => copy.appendChild(child));
+      card.appendChild(media);
+      card.appendChild(copy);
+      card.dataset.categoryId = config.id;
+    });
+
+    await Promise.all(categoryMedia.map(async config => {
+      try{
+        const response = await fetch(`assets/categories/${config.id}.b64.txt`,{cache:'force-cache'});
+        if(!response.ok) return;
+        const base64 = (await response.text()).trim();
+        doc.querySelectorAll(`[data-category-image="${config.id}"]`).forEach(media => {
+          media.style.backgroundImage = `url("data:image/jpeg;base64,${base64}")`;
+          media.classList.add('loaded');
+        });
+      }catch(error){
+        console.warn('TEQUILA5M category image failed to load:',config.id,error);
+      }
+    }));
+  }
+
   function inject(){
     const doc = frame.contentDocument;
-    if(!doc || !doc.body || doc.getElementById('featured')) return;
+    if(!doc || !doc.body) return;
 
-    const style = doc.createElement('style');
-    style.id = 'tequila-featured-styles';
-    style.textContent = `
-      .featured-drops{position:relative;isolation:isolate}
-      .featured-drops:before{content:"";position:absolute;inset:20px -2vw auto;height:76%;pointer-events:none;z-index:-1;background:radial-gradient(circle at 15% 30%,rgba(255,60,174,.10),transparent 32%),radial-gradient(circle at 88% 40%,rgba(244,189,54,.10),transparent 34%)}
-      .featured-drops .section-head{align-items:center}
-      .featured-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-      .featured-kicker{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:rgba(255,60,174,.07);border:1px solid rgba(255,60,174,.24);color:#ff82c9;font-size:.66rem;font-weight:1000;letter-spacing:.13em}
-      .featured-count{color:var(--muted);font-size:.78rem;font-weight:800}
-      .featured-rail{display:flex;gap:15px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 3px 17px;overscroll-behavior-inline:contain;scrollbar-width:thin;scrollbar-color:rgba(244,189,54,.45) transparent}
-      .featured-rail::-webkit-scrollbar{height:7px}.featured-rail::-webkit-scrollbar-track{background:transparent}.featured-rail::-webkit-scrollbar-thumb{background:rgba(244,189,54,.38);border-radius:999px}
-      .featured-drop-card{flex:0 0 min(380px,86vw);scroll-snap-align:start;overflow:hidden;border:1px solid rgba(244,189,54,.29);border-radius:21px;background:linear-gradient(180deg,rgba(24,24,27,.98),rgba(7,8,9,.98));box-shadow:0 16px 38px rgba(0,0,0,.38);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
-      .featured-drop-card:hover{transform:translateY(-5px);border-color:rgba(244,189,54,.72);box-shadow:0 20px 48px rgba(0,0,0,.48),0 0 26px rgba(244,189,54,.10),0 0 18px rgba(255,60,174,.06)}
-      .featured-media{display:block;position:relative;overflow:hidden;background:#090a0b}
-      .featured-media img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .28s ease}
-      .featured-drop-card:hover .featured-media img{transform:scale(1.035)}
-      .featured-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,rgba(0,0,0,.78))}
-      .featured-badge{position:absolute;left:13px;top:13px;z-index:2;padding:7px 9px;border-radius:999px;background:rgba(5,5,5,.82);border:1px solid rgba(244,189,54,.46);color:#ffd86b;font-size:.65rem;font-weight:1000;letter-spacing:.11em}
-      .featured-play{position:absolute;left:50%;top:50%;z-index:2;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:rgba(244,189,54,.95);color:#211400;font-size:1.15rem;box-shadow:0 0 0 8px rgba(244,189,54,.11),0 13px 34px rgba(0,0,0,.42)}
-      .featured-copy{padding:17px}
-      .featured-copy small{display:block;color:#ff7bc5;font-weight:1000;letter-spacing:.13em;font-size:.63rem;margin-bottom:7px}
-      .featured-copy h3{margin:0 0 6px;font-size:1.25rem;letter-spacing:-.02em}
-      .featured-copy p{margin:0 0 12px;color:var(--muted);font-size:.83rem;line-height:1.5}
-      .featured-packages{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
-      .featured-package{padding:5px 8px;border-radius:999px;background:#090a0b;border:1px solid rgba(244,189,54,.17);color:#d9cbaa;font-size:.65rem;font-weight:900}
-      .featured-actions{display:flex;gap:7px;flex-wrap:wrap}
-      .featured-actions .pill{flex:1;min-width:125px;border-radius:11px;padding:10px 11px;font-size:.78rem}
-      .featured-watch{background:linear-gradient(180deg,#191219,#0f0d11)!important;border-color:rgba(255,60,174,.25)!important;color:#fff!important}
-      .featured-full-link{white-space:nowrap}
-      @media(max-width:680px){.featured-drops .section-head{align-items:flex-start}.featured-full-link{width:100%}.featured-drop-card{flex-basis:86vw}.featured-actions{flex-direction:column}.featured-actions .pill{width:100%}}
-      @media(prefers-reduced-motion:reduce){.featured-drop-card,.featured-media img{transition:none!important}}
-    `;
-    doc.head.appendChild(style);
+    if(!doc.getElementById('tequila-featured-styles')){
+      const style = doc.createElement('style');
+      style.id = 'tequila-featured-styles';
+      style.textContent = `
+        .ticker-card{width:320px;min-height:274px;padding:0;background:linear-gradient(180deg,#151619,#090a0b);border-color:rgba(244,189,54,.28);box-shadow:0 13px 30px rgba(0,0,0,.36);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+        .ticker-card:before{display:none!important}
+        .ticker-card:hover{transform:translateY(-6px);border-color:rgba(244,189,54,.72);box-shadow:0 20px 44px rgba(0,0,0,.48),0 0 24px rgba(244,189,54,.11),0 0 16px rgba(255,60,174,.06)}
+        .ticker-media{height:180px;position:relative;overflow:hidden;background:#0a0b0c center/cover no-repeat;border-bottom:1px solid rgba(244,189,54,.18);transition:transform .28s ease,filter .28s ease;filter:saturate(.92) brightness(.94)}
+        .ticker-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.01) 48%,rgba(0,0,0,.30) 76%,rgba(5,5,5,.82));pointer-events:none}
+        .ticker-card:hover .ticker-media{filter:saturate(1.06) brightness(1.02);transform:scale(1.015)}
+        .ticker-copy{position:relative;z-index:2;padding:14px 16px 16px;background:linear-gradient(180deg,rgba(14,15,17,.98),rgba(8,9,10,.99))}
+        .ticker-copy strong{display:block;font-size:1.05rem;margin:0;color:#fff4d5}
+        .ticker-copy span{display:block;color:var(--muted);font-size:.77rem;line-height:1.42;margin:5px 0 9px}
+        .ticker-copy em{display:inline-flex;align-items:center;color:var(--gold);font-weight:950;font-size:.75rem;letter-spacing:.01em}
+        .featured-drops{position:relative;isolation:isolate}
+        .featured-drops:before{content:"";position:absolute;inset:20px -2vw auto;height:76%;pointer-events:none;z-index:-1;background:radial-gradient(circle at 15% 30%,rgba(255,60,174,.10),transparent 32%),radial-gradient(circle at 88% 40%,rgba(244,189,54,.10),transparent 34%)}
+        .featured-drops .section-head{align-items:center}
+        .featured-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .featured-kicker{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:rgba(255,60,174,.07);border:1px solid rgba(255,60,174,.24);color:#ff82c9;font-size:.66rem;font-weight:1000;letter-spacing:.13em}
+        .featured-count{color:var(--muted);font-size:.78rem;font-weight:800}
+        .featured-rail{display:flex;gap:15px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 3px 17px;overscroll-behavior-inline:contain;scrollbar-width:thin;scrollbar-color:rgba(244,189,54,.45) transparent}
+        .featured-rail::-webkit-scrollbar{height:7px}.featured-rail::-webkit-scrollbar-track{background:transparent}.featured-rail::-webkit-scrollbar-thumb{background:rgba(244,189,54,.38);border-radius:999px}
+        .featured-drop-card{flex:0 0 min(380px,86vw);scroll-snap-align:start;overflow:hidden;border:1px solid rgba(244,189,54,.29);border-radius:21px;background:linear-gradient(180deg,rgba(24,24,27,.98),rgba(7,8,9,.98));box-shadow:0 16px 38px rgba(0,0,0,.38);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+        .featured-drop-card:hover{transform:translateY(-5px);border-color:rgba(244,189,54,.72);box-shadow:0 20px 48px rgba(0,0,0,.48),0 0 26px rgba(244,189,54,.10),0 0 18px rgba(255,60,174,.06)}
+        .featured-media{display:block;position:relative;overflow:hidden;background:#090a0b}
+        .featured-media img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .28s ease}
+        .featured-drop-card:hover .featured-media img{transform:scale(1.035)}
+        .featured-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,rgba(0,0,0,.78))}
+        .featured-badge{position:absolute;left:13px;top:13px;z-index:2;padding:7px 9px;border-radius:999px;background:rgba(5,5,5,.82);border:1px solid rgba(244,189,54,.46);color:#ffd86b;font-size:.65rem;font-weight:1000;letter-spacing:.11em}
+        .featured-play{position:absolute;left:50%;top:50%;z-index:2;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:rgba(244,189,54,.95);color:#211400;font-size:1.15rem;box-shadow:0 0 0 8px rgba(244,189,54,.11),0 13px 34px rgba(0,0,0,.42)}
+        .featured-copy{padding:17px}
+        .featured-copy small{display:block;color:#ff7bc5;font-weight:1000;letter-spacing:.13em;font-size:.63rem;margin-bottom:7px}
+        .featured-copy h3{margin:0 0 6px;font-size:1.25rem;letter-spacing:-.02em}
+        .featured-copy p{margin:0 0 12px;color:var(--muted);font-size:.83rem;line-height:1.5}
+        .featured-packages{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
+        .featured-package{padding:5px 8px;border-radius:999px;background:#090a0b;border:1px solid rgba(244,189,54,.17);color:#d9cbaa;font-size:.65rem;font-weight:900}
+        .featured-actions{display:flex;gap:7px;flex-wrap:wrap}
+        .featured-actions .pill{flex:1;min-width:125px;border-radius:11px;padding:10px 11px;font-size:.78rem}
+        .featured-watch{background:linear-gradient(180deg,#191219,#0f0d11)!important;border-color:rgba(255,60,174,.25)!important;color:#fff!important}
+        .featured-full-link{white-space:nowrap}
+        @media(max-width:680px){.ticker-card{width:275px;min-height:248px}.ticker-media{height:154px}.ticker-copy{padding:12px 14px 14px}.featured-drops .section-head{align-items:flex-start}.featured-full-link{width:100%}.featured-drop-card{flex-basis:86vw}.featured-actions{flex-direction:column}.featured-actions .pill{width:100%}}
+        @media(prefers-reduced-motion:reduce){.ticker-card,.ticker-media,.featured-drop-card,.featured-media img{transition:none!important}}
+      `;
+      doc.head.appendChild(style);
+    }
 
-    const section = doc.createElement('section');
-    section.id = 'featured';
-    section.className = 'section shell featured-drops';
-    section.setAttribute('aria-labelledby','featuredHeading');
-    section.innerHTML = `
-      <div class="section-head">
-        <div>
-          <div class="featured-title-row"><span class="featured-kicker">✦ REAL TEQUILA5M MEDIA</span><span class="featured-count">10 trailers • 11 matched packages</span></div>
-          <h2 id="featuredHeading" style="margin-top:10px">Featured Drops</h2>
-          <p>Watch the real trailer, then jump straight to the exact Tebex package you matched with it.</p>
+    enhanceCategories(doc);
+
+    if(!doc.getElementById('featured')){
+      const section = doc.createElement('section');
+      section.id = 'featured';
+      section.className = 'section shell featured-drops';
+      section.setAttribute('aria-labelledby','featuredHeading');
+      section.innerHTML = `
+        <div class="section-head">
+          <div>
+            <div class="featured-title-row"><span class="featured-kicker">✦ REAL TEQUILA5M MEDIA</span><span class="featured-count">10 trailers • 11 matched packages</span></div>
+            <h2 id="featuredHeading" style="margin-top:10px">Featured Drops</h2>
+            <p>Watch the real trailer, then jump straight to the exact Tebex package you matched with it.</p>
+          </div>
+          <a class="pill dark featured-full-link" href="featured-drops.html">Open Full Showcase →</a>
         </div>
-        <a class="pill dark featured-full-link" href="featured-drops.html">Open Full Showcase →</a>
-      </div>
-      <div class="featured-rail" aria-label="Featured TEQUILA5M drops">
-        ${drops.map((drop,index) => {
-          const video = trailerUrl(drop);
-          const pkgTags = drop.packages.map(p => `<span class="featured-package">${p.label.replace('View ','')} #${p.id}</span>`).join('');
-          const pkgButtons = drop.packages.map(p => `<a class="pill gold" href="https://tequila.tebex.io/package/${p.id}" target="_blank" rel="noopener">${p.label} ↗</a>`).join('');
-          const title = drop.packages.length > 1 ? 'MLO + Script Feature' : `Featured Drop ${String(index+1).padStart(2,'0')}`;
-          const copy = drop.packages.length > 1 ? 'One real trailer connected to both the MLO and script packages you selected.' : 'Real TEQUILA5M video media connected directly to its matched Tebex package.';
-          const watchText = drop.time ? `▶ Watch @ ${drop.time}` : '▶ Watch Trailer';
-          return `<article class="featured-drop-card">
-            <a class="featured-media" href="${video}" target="_blank" rel="noopener" aria-label="Watch ${title} trailer">
-              <img src="https://i.ytimg.com/vi/${drop.video}/hqdefault.jpg" alt="TEQUILA5M ${title} trailer thumbnail" loading="lazy">
-              <span class="featured-badge">${drop.label}</span><span class="featured-play">▶</span>
-            </a>
-            <div class="featured-copy"><small>TEQUILA5M FEATURED</small><h3>${title}</h3><p>${copy}</p><div class="featured-packages">${pkgTags}</div><div class="featured-actions"><a class="pill dark featured-watch" href="${video}" target="_blank" rel="noopener">${watchText}</a>${pkgButtons}</div></div>
-          </article>`;
-        }).join('')}
-      </div>`;
+        <div class="featured-rail" aria-label="Featured TEQUILA5M drops">
+          ${drops.map((drop,index) => {
+            const video = trailerUrl(drop);
+            const pkgTags = drop.packages.map(p => `<span class="featured-package">${p.label.replace('View ','')} #${p.id}</span>`).join('');
+            const pkgButtons = drop.packages.map(p => `<a class="pill gold" href="https://tequila.tebex.io/package/${p.id}" target="_blank" rel="noopener">${p.label} ↗</a>`).join('');
+            const title = drop.packages.length > 1 ? 'MLO + Script Feature' : `Featured Drop ${String(index+1).padStart(2,'0')}`;
+            const copy = drop.packages.length > 1 ? 'One real trailer connected to both the MLO and script packages you selected.' : 'Real TEQUILA5M video media connected directly to its matched Tebex package.';
+            const watchText = drop.time ? `▶ Watch @ ${drop.time}` : '▶ Watch Trailer';
+            return `<article class="featured-drop-card">
+              <a class="featured-media" href="${video}" target="_blank" rel="noopener" aria-label="Watch ${title} trailer">
+                <img src="https://i.ytimg.com/vi/${drop.video}/hqdefault.jpg" alt="TEQUILA5M ${title} trailer thumbnail" loading="lazy">
+                <span class="featured-badge">${drop.label}</span><span class="featured-play">▶</span>
+              </a>
+              <div class="featured-copy"><small>TEQUILA5M FEATURED</small><h3>${title}</h3><p>${copy}</p><div class="featured-packages">${pkgTags}</div><div class="featured-actions"><a class="pill dark featured-watch" href="${video}" target="_blank" rel="noopener">${watchText}</a>${pkgButtons}</div></div>
+            </article>`;
+          }).join('')}
+        </div>`;
 
-    const browse = doc.getElementById('browse');
-    if(browse && browse.parentNode) browse.parentNode.insertBefore(section,browse);
-    else doc.querySelector('main')?.appendChild(section);
+      const browse = doc.getElementById('browse');
+      if(browse && browse.parentNode) browse.parentNode.insertBefore(section,browse);
+      else doc.querySelector('main')?.appendChild(section);
+    }
 
     const nav = doc.getElementById('nav');
     if(nav && !doc.getElementById('featuredNavLink')){
