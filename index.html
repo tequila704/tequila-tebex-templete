@@ -61,7 +61,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050505}#te
 
     await Promise.all(categoryMedia.map(async config => {
       try{
-        const response = await fetch(`assets/categories/${config.id}.b64.txt`,{cache:'force-cache'});
+        const response = await fetch(`assets/categories/${config.id}.b64.txt?v=20261010-4`,{cache:'no-store'});
         if(!response.ok) return;
         const base64 = (await response.text()).trim();
         doc.querySelectorAll(`[data-category-image="${config.id}"]`).forEach(media => {
