@@ -1,0 +1,57 @@
+name: Apply Pink Tequila Theme
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Switch cyan/blue accents back to pink
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              '--pink:#11d9ff!important':'--pink:#ff3cae!important',
+              '--cyan:#16e7ff':'--cyan:#ff3cae',
+              '--blue:#5f7cff':'--blue:#ff5fbd',
+              'rgba(22,231,255':'rgba(255,60,174',
+              'rgba(95,124,255':'rgba(255,77,188',
+              '#16e7ff':'#ff3cae',
+              '#5f7cff':'#ff5fbd',
+              '#d5fbff':'#ffd2ea',
+              '#d8fbff':'#ffd7ed',
+              '#b6f6ff':'#ffc6e4',
+              '#8ef2ff':'#ff86cb',
+              '#baf7ff':'#ffbee2',
+              '#c8fbff':'#ffd2ea',
+              '#d9faff':'#ffe0f0',
+              '#e8fbff':'#fff0f8',
+              '#bfeff7':'#ffc3e2',
+              '#78efff':'#ff78c4',
+              'filter:hue-rotate(130deg) saturate(.8)!important':'filter:saturate(.92)!important'
+          }
+          for a,b in replacements.items():
+              s = s.replace(a,b)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit theme update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Switch TEQUILA5M redesign back to pink accents"
+            git push
+          fi
