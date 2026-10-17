@@ -1,0 +1,32 @@
+name: Apply Final TEQUILA5M Hero V2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-final-hero-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Repair chunks, build hero, and patch storefront
+        run: python .github/scripts/apply_final_hero_v2.py
+
+      - name: Commit final hero
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .hero-upload assets/tequila5m-hero-final.webp home.html index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Use exact final TEQUILA5M hero banner"
+          git push
