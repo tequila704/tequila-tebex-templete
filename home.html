@@ -158,6 +158,12 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 @media(max-width:1000px){.nav{position:absolute;left:3vw;right:3vw;top:68px;display:none;flex-direction:column;align-items:stretch;background:#0a0b0c;border:1px solid var(--line2);border-radius:15px;padding:9px}.nav.open{display:flex}.nav a,.nav button{text-align:left}.menu-btn{display:block}.header-actions .login-link{display:none}.browser{grid-template-columns:1fr}.tools{position:static}.filter-stack{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.trust{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.shell{width:min(94vw,1500px)}.header-inner{min-height:66px}.brand{font-size:.92rem}.brand-mark{width:54px;height:54px;flex-basis:54px}.header-actions .store-link{display:none}.hero{padding-top:14px}.hero-image{height:220px;object-position:center}.trust{grid-template-columns:1fr}.section{padding:22px 0}.section-head{align-items:start;flex-direction:column}.filter-stack{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr}.category-track{animation-duration:30s}.ticker-card{width:245px}.card-actions{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}.category-track{animation:none!important}}
+/* TEQUILA5M interactive image actions: working links over artwork, no visible duplicate buttons. */
+.tq-exact-hotspots{position:absolute;inset:0;z-index:7;pointer-events:none}
+.tq-exact-hotspot{position:absolute;top:78.6%;height:9.2%;border:1px solid transparent;border-radius:14px;background:transparent;color:transparent;font-size:0;cursor:pointer;pointer-events:auto;box-shadow:none;display:block}
+.tq-exact-shop{left:3.25%;width:13.35%}.tq-exact-discord{left:17.55%;width:12.1%}.tq-exact-copy{left:30.55%;width:13.05%}
+.tq-exact-hotspot:hover,.tq-exact-hotspot:focus-visible{border-color:rgba(255,77,188,.8);box-shadow:0 0 0 2px rgba(255,77,188,.16),0 0 26px rgba(255,77,188,.3);outline:2px solid #fff;outline-offset:1px}
+@media(max-width:680px){.tq-exact-hotspots{display:none!important}}
 </style>
 </head>
 <body>
@@ -185,8 +191,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 <main id="home">
   <section class="hero shell" aria-label="TEQUILA5M banner">
     <div class="hero-image-wrap">
-      <img class="hero-image" src="assets/tequila5m-hero-new.webp?v=20261017-4k-ai" alt="TEQUILA5M premium FiveM resources banner">
+      <img class="hero-image" src="assets/tequila5m-hero-new.webp?v=20261017-sharp-ui-1716" alt="TEQUILA5M pink and gold marketplace banner" width="3840" height="1750" loading="eager" fetchpriority="high" decoding="async">
       <div class="hero-shade"></div>
+      <div class="tq-exact-hotspots" aria-label="TEQUILA5M hero actions">
+        <a class="tq-exact-hotspot tq-exact-shop" href="https://tequila.tebex.io/" target="_blank" rel="noopener noreferrer" aria-label="Shop on Tebex" title="Shop on Tebex">Shop on Tebex</a>
+        <a class="tq-exact-hotspot tq-exact-discord" href="https://discord.gg/QhgUH3RFuz" target="_blank" rel="noopener noreferrer" aria-label="Join Discord" title="Join Discord">Join Discord</a>
+        <button class="tq-exact-hotspot tq-exact-copy" id="heroCopyImage" type="button" aria-label="Copy store link" title="Copy store link">Copy store link</button>
+      </div>
     </div>
     <div class="hero-actions">
       <a class="pill gold" href="https://tequila.tebex.io/" target="_blank" rel="noopener">Shop on Tebex ↗</a>
@@ -459,7 +470,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(open));menuBtn.textContent=open?'✕':'☰';});
   all('#nav a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');menuBtn.textContent='☰';}));
 
-  const backTop=$('#backTop');
+  const heroCopyImage=document.getElementById('heroCopyImage');
+  heroCopyImage?.addEventListener('click',()=>document.getElementById('copyStore')?.click());
+
+    const backTop=$('#backTop');
   window.addEventListener('scroll',()=>backTop.classList.toggle('show',window.scrollY>500),{passive:true});
   backTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 

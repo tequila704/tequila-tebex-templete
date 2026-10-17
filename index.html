@@ -59,12 +59,6 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#030507}
       strip.innerHTML='<div class="tq-strip-track"><span>TEQUILA5M</span><b>PREMIUM FIVEM RESOURCES</b><i>✦</i><span>SCRIPTS</span><i>✦</i><span>MLOS</span><i>✦</i><span>UPGRADES</span><i>✦</i><span>FREE DROPS</span><i>✦</i><span>BUILT DIFFERENT</span></div>';
       header.prepend(strip);
     }
-    const heroWrap=doc.querySelector('.hero-image-wrap');
-    if(heroWrap&&!doc.getElementById('tq-hero-overlay')){
-      const overlay=doc.createElement('div'); overlay.id='tq-hero-overlay'; overlay.className='tq-hero-overlay';
-      overlay.innerHTML=`<div class="tq-hero-kicker"><span></span> TEQUILA5M MARKETPLACE</div><h1>Built for the city.<br><em>Designed to stand out.</em></h1><p>Premium FiveM scripts, MLOs and upgrades with a storefront that finally looks as custom as the resources inside it.</p><div class="tq-hero-badges"><span>⚡ Instant Access</span><span>✦ Premium Drops</span><span>↗ Tebex Checkout</span></div>`;
-      heroWrap.appendChild(overlay);
-    }
     const browseHead=doc.querySelector('#browse .section-head');
     if(browseHead&&!browseHead.querySelector('.tq-section-kicker')){const kicker=doc.createElement('div');kicker.className='tq-section-kicker';kicker.textContent='TEQUILA COLLECTION';browseHead.querySelector('div')?.prepend(kicker);}
   }
@@ -105,7 +99,17 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 .tq-exact-shop{left:3.25%;width:13.35%}
 .tq-exact-discord{left:17.55%;width:12.1%}
 .tq-exact-copy{left:30.55%;width:13.05%}
-@media(max-width:680px){.hero{padding-top:14px!important}.hero-image-wrap{border-radius:18px!important}.tq-exact-hotspot{border-radius:10px}}
+@media(max-width:680px){
+  .hero{padding-top:14px!important}
+  .hero-image-wrap{border-radius:18px!important;aspect-ratio:1837/837!important}
+  .tq-exact-hotspots{display:none!important}
+  .hero-actions{display:flex!important;justify-content:stretch!important;gap:9px!important;margin:11px 0 0!important}
+  .hero-actions .pill{min-width:0!important;flex:1 1 130px!important;font-size:.8rem!important;padding:11px 8px!important;border-color:rgba(255,60,174,.35)!important}
+  .hero-actions .pill.gold{background:linear-gradient(125deg,#ff8cdb,#fa2b9f)!important;color:#130513!important;border-color:#ff65c7!important}
+}
+.hero-image{image-rendering:auto!important;filter:none!important;backface-visibility:hidden!important}
+.tq-exact-hotspot:hover,.tq-exact-hotspot:focus-visible{outline:2px solid #ffe0f4!important;outline-offset:1px!important;border:1px solid #ff3cae!important;box-shadow:0 0 20px rgba(255,60,174,.32)!important}
+
 `;
         doc.head.appendChild(exactHeroStyle);
       }
