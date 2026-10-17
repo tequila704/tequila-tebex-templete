@@ -1,0 +1,39 @@
+name: Apply New TEQUILA5M Hero
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-new-hero.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-hero:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Replace inline hero with uploaded artwork
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('home.html')
+          text = p.read_text()
+          old = r'<img class="hero-image" src="data:image/webp;base64,[^"]+" alt="TEQUILA5M premium FiveM resources banner">'
+          new = '<img class="hero-image" src="assets/tequila5m-hero-new.webp?v=20261017-newhero" alt="TEQUILA5M premium FiveM resources banner">'
+          text2, count = re.subn(old, new, text, count=1)
+          if count != 1:
+              raise SystemExit(f'Expected one hero image replacement, got {count}')
+          p.write_text(text2)
+          PY
+      - name: Commit hero update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add home.html
+          git diff --cached --quiet || git commit -m "Use new uploaded TEQUILA5M hero artwork"
+          git push
