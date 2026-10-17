@@ -1,10 +1,30 @@
 from pathlib import Path
 import base64
+import hashlib
 
+expected = {
+    'chunk00.txt': '025d1d01049d24d4925fba8fe0f2257e8fe69f60b0a69eb96fcb4c79e0123276',
+    'chunk01.txt': '3ec20aefb5316d1ba2745e00a18139fc1cc3c3d60c7a65f631f9b4f4226d585f',
+    'chunk02.txt': '9d03447676d244ba634abeb9ffc8495ea0f7e04e66e3a668dd1159e301792300',
+    'chunk03.txt': '9a991e356b840077d42034c0cb579a9cc7882d61c1e6295444c8d0bfcf66b8fc',
+    'chunk04.txt': 'e8b858e7abd1fae2d9b5df99fabc3ae336e905b5dd6318a83341e5ca767e5063',
+    'chunk05.txt': 'b322d316eccedd214c7b21a77554765e24cc67a8f18902154bdaf1eedca4e200',
+    'chunk06.txt': '255fcf296b0e0e59c33aaf0a82d0c85d84cf84fce5396c0d3d6b43adf351f910',
+    'chunk07.txt': '4d39ec375aa2abd2996a9cf4c51dee457b641bd30ec35b25714bd053ba262ab7',
+}
 parts = sorted(Path('.hero-upload').glob('chunk*.txt'))
 assert len(parts) == 8, f"Expected 8 hero chunks, got {len(parts)}"
+bad = []
+for p in parts:
+    raw = p.read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    whitespace = sum(chr(c).isspace() for c in raw)
+    print(f'{p.name}: len={len(raw)} whitespace={whitespace} sha256={digest} expected={expected[p.name]}')
+    if digest != expected[p.name]:
+        bad.append(p.name)
+if bad:
+    raise SystemExit('Corrupt hero chunks: ' + ', '.join(bad))
 encoded = ''.join(p.read_text() for p in parts)
-encoded = ''.join(encoded.split())
 data = base64.b64decode(encoded, validate=True)
 assert data[:4] == b'RIFF' and data[8:12] == b'WEBP', data[:16]
 Path('assets/tequila5m-hero-final.webp').write_bytes(data)
