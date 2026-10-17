@@ -1,0 +1,43 @@
+name: Fix TEQUILA5M Home Header Logo
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Replace T5 header mark with Tequila logo
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('home.html')
+          s = p.read_text(encoding='utf-8')
+          old_markup = '<span class="brand-mark">T5</span>'
+          new_markup = '<span class="brand-mark"><img src="assets/tequila-logo.webp?v=20261017-home-logo" alt="Tequila logo"></span>'
+          if old_markup in s:
+              s = s.replace(old_markup, new_markup, 1)
+          old_css = '.brand-mark{width:43px;height:43px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#ffe47d,#f4bd36 58%,#8e5d06);color:#211400;box-shadow:0 0 30px rgba(244,189,54,.18)}'
+          new_css = '.brand-mark{width:64px;height:64px;border-radius:17px;display:block;overflow:hidden;background:#050507;border:1px solid rgba(255,60,174,.55);box-shadow:0 0 0 1px rgba(244,189,54,.12),0 0 28px rgba(255,60,174,.22),0 0 16px rgba(244,189,54,.10);flex:0 0 64px}.brand-mark img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}'
+          if old_css in s:
+              s = s.replace(old_css, new_css, 1)
+          s = s.replace('.brand-mark{width:38px;height:38px}', '.brand-mark{width:54px;height:54px;flex-basis:54px}', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit direct home logo fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add home.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Replace T5 with Tequila logo in home header"
+          git push
