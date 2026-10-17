@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tequila Pets — Premium Shop Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link href="premium.css" rel="stylesheet">
+</head>
+<body>
+<div class="shop">
+  <div class="topbar">
+    <div class="brandMini"><span class="dot"></span> Premium FiveM Pet Experience <span style="opacity:.42">/</span> Live Preview</div>
+    <div class="logo">
+      <div class="logoTitle">TEQUILA <span>PETS</span> <span style="font-family:Inter;font-size:1.35vw">🐾</span></div>
+      <div class="logoSub">Premium Pet Shop</div>
+      <div class="logoRule"></div>
+    </div>
+  </div>
+
+  <aside class="infoPanel" id="infoPanel"></aside>
+
+  <section class="stageWrap">
+    <div class="stageHalo"><div class="stageWatermark"><span class="paw">🐾</span>TEQUILA PETS</div></div>
+    <div class="stageBase"></div>
+    <div class="petStage" id="petStage"></div>
+    <div class="stagePlaque">3D PET APPEARS HERE IN FIVEM</div>
+    <div class="rotateHint"><b>DRAG</b> TO ROTATE • USE ZOOM CONTROL</div>
+  </section>
+
+  <aside class="zoomPanel">
+    <div class="zoomTitle">Zoom</div>
+    <div class="zoomTrackWrap">
+      <div class="zoomSign plus">+</div>
+      <div class="zoomRail"></div>
+      <div class="zoomFill" id="zoomFill"></div>
+      <input aria-label="Pet zoom" class="zoomSlider" id="zoom" max="100" min="30" type="range" value="62">
+      <div class="zoomSign minus">−</div>
+    </div>
+    <div class="zoomValue" id="zoomValue">62%</div>
+  </aside>
+
+  <div class="previewBadge"><b>Browser Preview</b> • Actual FiveM ped replaces the center preview</div>
+
+  <section class="carouselShell">
+    <button aria-label="Previous pets" class="carArrow" id="scrollLeft">‹</button>
+    <div class="petItems" id="petItems"></div>
+    <button aria-label="Next pets" class="carArrow" id="scrollRight">›</button>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<script src="premium.js"></script>
+</body>
+</html>
