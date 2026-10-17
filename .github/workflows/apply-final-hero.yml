@@ -29,3 +29,5 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m "Use final TEQUILA5M hero artwork"
           git push
+
+# hero integrity diagnostic rerun 2026-10-17
