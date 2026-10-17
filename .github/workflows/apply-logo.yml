@@ -1,0 +1,38 @@
+name: Apply Tequila Header Logo
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "assets/tequila-logo.webp"
+      - "tools/apply-logo.py"
+      - ".github/workflows/apply-logo.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch-logo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch header logo
+        run: python tools/apply-logo.py
+
+      - name: Commit logo update
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No index.html changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Use Tequila logo in site header"
+          git push
