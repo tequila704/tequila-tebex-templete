@@ -1,0 +1,130 @@
+name: Upscale TEQUILA5M Hero to 4K
+
+on:
+  push:
+    paths:
+      - '.github/workflows/upscale-hero-4k.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  upscale-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install upscaler dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install opencv-contrib-python-headless==4.10.0.84 pillow
+
+      - name: Download EDSR 4x super-resolution model
+        run: |
+          curl -L --fail --retry 4 --retry-delay 3 \
+            https://github.com/Saafke/EDSR_Tensorflow/raw/master/models/EDSR_x4.pb \
+            -o /tmp/EDSR_x4.pb
+          test -s /tmp/EDSR_x4.pb
+
+      - name: AI upscale hero to 4K
+        run: |
+          python - <<'PY'
+          import cv2
+          from PIL import Image, ImageFilter
+          from pathlib import Path
+
+          source = Path('assets/tequila5m-hero-new.webp')
+          if not source.exists():
+              raise SystemExit('Hero source missing')
+
+          img = cv2.imread(str(source), cv2.IMREAD_COLOR)
+          if img is None:
+              raise SystemExit('Could not decode hero source')
+
+          sr = cv2.dnn_superres.DnnSuperResImpl_create()
+          sr.readModel('/tmp/EDSR_x4.pb')
+          sr.setModel('edsr', 4)
+          enhanced = sr.upsample(img)
+          cv2.imwrite('/tmp/hero_edsr.png', enhanced)
+
+          im = Image.open('/tmp/hero_edsr.png').convert('RGB')
+          target_ratio = 1837 / 837
+          ratio = im.width / im.height
+          if ratio > target_ratio:
+              new_w = round(im.height * target_ratio)
+              left = (im.width - new_w) // 2
+              im = im.crop((left, 0, left + new_w, im.height))
+          elif ratio < target_ratio:
+              new_h = round(im.width / target_ratio)
+              top = (im.height - new_h) // 2
+              im = im.crop((0, top, im.width, top + new_h))
+
+          im = im.resize((3840, 1750), Image.Resampling.LANCZOS)
+          im = im.filter(ImageFilter.UnsharpMask(radius=1.15, percent=135, threshold=2))
+          im.save(source, 'WEBP', quality=96, method=6)
+          print('FINAL:', im.size, source.stat().st_size, 'bytes')
+
+          home = Path('home.html')
+          text = home.read_text(encoding='utf-8')
+          import re
+          text = re.sub(
+              r'assets/tequila5m-hero-new\.webp\?v=[^\"\']+',
+              'assets/tequila5m-hero-new.webp?v=20261017-4k-ai',
+              text,
+              count=1,
+          )
+          home.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify 4K hero
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          p=Path('assets/tequila5m-hero-new.webp')
+          im=Image.open(p)
+          print('Hero dimensions:', im.size)
+          print('Hero bytes:', p.stat().st_size)
+          assert im.width == 3840 and im.height == 1750
+          assert p.stat().st_size > 500000
+          PY
+
+      - name: Commit 4K hero to main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/tequila5m-hero-new.webp home.html
+          git commit -m 'Upgrade TEQUILA5M hero to AI-upscaled 4K' || true
+          git fetch origin main
+          if ! git rebase origin/main; then
+            git checkout --theirs assets/tequila5m-hero-new.webp home.html || true
+            git add assets/tequila5m-hero-new.webp home.html
+            GIT_EDITOR=true git rebase --continue || true
+          fi
+          git push origin HEAD:main
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload 4K site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: '.'
+
+      - name: Deploy 4K site
+        id: deployment
+        uses: actions/deploy-pages@v4
