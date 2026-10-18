@@ -1,0 +1,61 @@
+name: Look up TEQUILA video and Tebex product titles
+on:
+  push:
+    paths:
+      - '.github/workflows/resolve-tequila-video-titles.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  titles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query video and package metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, urllib.request, urllib.parse, re, html
+          from html.parser import HTMLParser
+
+          drops=[
+            ('rAc7doNLnww','7729280'),('b2zPZnqZXOM','7108243'),
+            ('QTFm-E0drFo','7498884'),('rKPf3houKrg','7201139'),
+            ('taEsu7iMf2g','7469409'),('B8mP3AFYn8w','7617452'),
+            ('g46_jcurtKk','7624933'),('UqImrRnT3Lc','7689285'),
+            ('lnVvY7aEiNc','7628579'),('H4m2jrB6kV8','7666178')
+          ]
+          class Meta(HTMLParser):
+            def __init__(self): super().__init__();self.title='';self.metatitle='';self.in_title=False
+            def handle_starttag(self,tag,attrs):
+              d=dict(attrs)
+              if tag=='title':self.in_title=True
+              if tag=='meta' and (d.get('property') in ('og:title','twitter:title') or d.get('name')=='title'):
+                self.metatitle=self.metatitle or d.get('content','')
+            def handle_endtag(self,tag):
+              if tag=='title':self.in_title=False
+            def handle_data(self,data):
+              if self.in_title:self.title+=data
+
+          def get(url):
+            req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/132.0 Safari/537.36','Accept':'text/html,application/json,*/*'})
+            with urllib.request.urlopen(req,timeout=12) as r:return r.read(1500000).decode('utf-8','replace'),r.status
+
+          for vid,pkg in drops:
+            video_title=None;product_title=None;errors=[]
+            video_url='https://www.youtube.com/watch?v='+vid
+            for u in [
+              'https://www.youtube.com/oembed?format=json&url='+urllib.parse.quote(video_url,safe=''),
+              'https://noembed.com/embed?url='+urllib.parse.quote(video_url,safe='')]:
+              try:
+                data,code=get(u)
+                v=json.loads(data)
+                if v.get('title'):video_title=v['title'];break
+                errors.append(str(v)[:100])
+              except Exception as ex:errors.append(type(ex).__name__+':'+str(ex)[:75])
+            for u in ['https://tequila.tebex.io/package/'+pkg]:
+              try:
+                data,code=get(u); p=Meta();p.feed(data)
+                product_title=p.metatitle or p.title
+              except Exception as ex:errors.append('Tebex '+type(ex).__name__+':'+str(ex)[:85])
+            print('TITLE_RESULT '+json.dumps({'video':vid,'package':pkg,'youtube_title':video_title,'tebex_title':product_title,'errors':errors},ensure_ascii=False),flush=True)
+          PY
