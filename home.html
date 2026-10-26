@@ -165,15 +165,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .tq-exact-hotspot:hover,.tq-exact-hotspot:focus-visible{border-color:rgba(255,77,188,.8);box-shadow:0 0 0 2px rgba(255,77,188,.16),0 0 26px rgba(255,77,188,.3);outline:2px solid #fff;outline-offset:1px}
 @media(max-width:680px){.tq-exact-hotspots{display:none!important}}
 
-/* Premium TEQUILA5M two-banner hero slider: smooth leftward transition and working image button hotspots. */
-.hero-image-wrap{aspect-ratio:1837/837;min-height:0}
+/* TEQUILA5M 2-slide cinematic carousel — the WHOLE banner moves horizontally. */
+.hero-image-wrap{aspect-ratio:1837 / 837;min-height:0}
 .tq-hero-stage{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
-.tq-hero-panel{position:absolute;inset:0;opacity:0;visibility:hidden;transform:translate3d(100%,0,0)}
-.tq-hero-panel.is-active{opacity:1;visibility:visible;transform:translate3d(0,0,0);animation:tqSlideIn .9s cubic-bezier(.22,.61,.36,1) both}
-.tq-hero-panel.is-outgoing{opacity:1;visibility:visible;transform:translate3d(-100%,0,0);animation:tqSlideOut .9s cubic-bezier(.22,.61,.36,1) both}
-.tq-hero-panel .hero-image,.tq-hero-secondary-image{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;min-height:0!important;object-fit:cover!important;object-position:center!important;filter:none!important;opacity:1!important;transform:none!important}
-@keyframes tqSlideIn{from{transform:translate3d(100%,0,0)}to{transform:translate3d(0,0,0)}}
-@keyframes tqSlideOut{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100%,0,0)}}
+#tqHeroTrack{display:flex;width:200%;height:100%;transform:translate3d(0,0,0);transition:transform 1150ms cubic-bezier(.22,.61,.36,1);will-change:transform;backface-visibility:hidden}
+#tqHeroTrack.is-second{transform:translate3d(-50%,0,0)}
+#tqHeroTrack .tq-hero-panel{position:relative!important;inset:auto!important;flex:0 0 50%;width:50%;min-width:0;height:100%;overflow:hidden;visibility:visible!important;opacity:1!important;transform:none!important;animation:none!important}
+#tqHeroTrack .tq-hero-panel .hero-image,#tqHeroTrack .tq-hero-secondary-image{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;min-height:0!important;object-fit:cover!important;object-position:center!important;filter:none!important;opacity:1!important;transform:none!important}
 .tq-hero-slider-controls{position:absolute;right:18px;bottom:16px;display:flex;align-items:center;gap:8px;z-index:10;padding:6px 9px;border:1px solid rgba(255,60,174,.38);border-radius:100px;background:rgba(10,4,15,.65);backdrop-filter:blur(8px);box-shadow:0 4px 22px rgba(0,0,0,.55)}
 .tq-hero-nav-arrow{height:24px;width:24px;background:transparent;border:0;color:#ffdaec;font-size:26px;line-height:18px;padding:0;display:grid;place-items:center;cursor:pointer}
 .tq-hero-nav-arrow:hover{color:#fff}
@@ -183,7 +181,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .tq-hero-dot:hover{background:#fff}
 .tq-hero-nav-arrow:focus-visible,.tq-hero-dot:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(max-width:680px){.tq-hero-slider-controls{right:9px;bottom:9px;gap:5px;padding:4px 7px}.tq-hero-nav-arrow{width:19px;height:20px;font-size:20px}.tq-hero-dot{height:6px;width:6px}.tq-hero-dot.is-current{width:15px}}
-@media(prefers-reduced-motion:reduce){.tq-hero-panel.is-active,.tq-hero-panel.is-outgoing{animation:none!important}.tq-hero-panel.is-outgoing{visibility:hidden!important;opacity:0!important}.tq-hero-dot{transition:none!important}}
+@media(prefers-reduced-motion:reduce){#tqHeroTrack{transition:none!important;will-change:auto}.tq-hero-dot{transition:none!important}}
 </style>
 </head>
 <body>
@@ -212,11 +210,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
   <section class="hero shell" aria-label="TEQUILA5M banner">
     <div class="hero-image-wrap">
       <div class="tq-hero-stage" id="tqHeroStage" aria-roledescription="carousel" aria-label="TEQUILA5M marketplace banners">
+        <div class="tq-hero-track" id="tqHeroTrack">
         <div class="tq-hero-panel is-active" data-slide="0" aria-hidden="false">
           <img class="hero-image" src="assets/tequila5m-hero-sharp-4k.webp?v=20261017-hq4k-final" alt="TEQUILA5M premium marketplace — sharp 4K pink and gold hero" width="3840" height="1750" loading="eager" fetchpriority="high" decoding="async">
         </div>
         <div class="tq-hero-panel" data-slide="1" aria-hidden="true">
           <img class="tq-hero-secondary-image" src="assets/tequila5m-hero-slide-2.webp?v=20261025-second-banner" alt="TEQUILA5M — Own the Night, Set the Standard. Alternate pink-and-gold marketplace banner with new curvy model" width="1853" height="849" loading="eager" decoding="async">
+        </div>
         </div>
       </div>
       <div class="tq-hero-slider-controls" aria-label="Hero slideshow controls">
@@ -517,6 +517,6 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 </script>
 <script src="assets/tequila-featured-autoplay.js?v=20261017-autoplay-v1" defer></script>
 <script src="assets/tequila-featured-marquee.js?v=20261017-right-marquee-v1" defer></script>
-<script src="assets/tequila-hero-carousel.js?v=20261025-slide-v1" defer></script>
+<script src="assets/tequila-hero-carousel.js?v=20261025-animated-v2" defer></script>
 </body>
 </html>
